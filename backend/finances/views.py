@@ -1,21 +1,13 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import generics
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.views import APIView
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from .models import Finances, Expense, Expenses
-from .serializers import FinancesSerializer, ExpenseSerializer, UserSerializer, UserCheckSerializer, UserUpdateSerializer, ExpensesSerializer
+from rest_framework.response import Response # type: ignore
+from rest_framework.decorators import api_view # type: ignore
+from rest_framework import generics, status # type: ignore
+from rest_framework.views import APIView # type: ignore
+from django.contrib.auth.models import User # type: ignore
+from django.contrib.auth import authenticate # type: ignore
+from .models import Expenses, Kryptos
+from .serializers import UserSerializer, UserCheckSerializer, UserUpdateSerializer, ExpensesSerializer, KryptosSerializer
 
-class ExpenseListCreateView(generics.ListCreateAPIView):
-    queryset = Expense.objects.all()
-    serializer_class = ExpenseSerializer
-
-class ExpenseDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Expense.objects.all()
-    serializer_class = ExpenseSerializer
+# Admin page: admin - zmitac123
 
 # -------------------------------- User ------------------------------------
 @api_view(['GET'])
@@ -157,17 +149,64 @@ class ExpensesListCreate(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- # --------------------------------------------------------------------------
-           
-@api_view(['GET'])
-def getData(request):
-    items = Finances.objects.all()
-    serializer = FinancesSerializer(items, many=True)
-    return Response(serializer.data)
+# --------------------------------------------------------------------------
 
-@api_view(['POST'])
-def addItem(request):
-    serializer = FinancesSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+# ------------------------------- Kryptos ---------------------------------    
+class KryptosListCreateView(generics.ListCreateAPIView):
+    queryset = Kryptos.objects.all()
+    serializer_class = KryptosSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class KryptosListView(generics.ListAPIView):
+    queryset = Kryptos.objects.all()
+    serializer_class = KryptosSerializer    
+
+class KryptosForUserView(generics.ListAPIView):
+    serializer_class = KryptosSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        try:
+            user = User.objects.get(pk=user_id)
+            return Kryptos.objects.filter(UserID=user)
+        except User.DoesNotExist:
+            return None  # Return None to handle the case where the user is not found
+
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            if queryset is not None:
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+class KryptoDeleteView(generics.DestroyAPIView):
+    queryset = Kryptos.objects.all()
+    serializer_class = KryptosSerializer
+
+    def destroy(self, request, user_id, krypto_id, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=user_id)
+            krypto = Kryptos.objects.get(id=krypto_id, UserID=user)
+            deleted_data = KryptosSerializer(krypto).data  # Serialize the deleted data
+            krypto.delete()
+            return Response(deleted_data, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Kryptos.DoesNotExist:
+            return Response({"error": "Krypto not found for the specified user."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# --------------------------------------------------------------------------

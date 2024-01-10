@@ -1,13 +1,13 @@
-from rest_framework import serializers
-from .models import Finances, Expense, Expenses
-from django.contrib.auth.models import User
+from rest_framework import serializers # type: ignore
+from .models import Expenses, Kryptos
+from django.contrib.auth.models import User # type: ignore
 
 # Ale jazdunia do JSON'a
 
-class FinancesSerializer(serializers.ModelSerializer):
+class KryptosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Finances
-        fields = '__all__'
+        model = Kryptos
+        fields = ['id', 'Coin', 'Amount', 'Worth', 'UserID']
 
 class UserCheckSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -27,8 +27,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
-
-class ExpenseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Expense
-        fields = ['id', 'Title', 'Amount', 'Date', 'Category']
