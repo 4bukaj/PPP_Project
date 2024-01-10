@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Finances, Expense
+from .models import Finances, Expense, Expenses
 from django.contrib.auth.models import User
 
 # Ale jazdunia do JSON'a
@@ -12,6 +12,11 @@ class FinancesSerializer(serializers.ModelSerializer):
 class UserCheckSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+class ExpensesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expenses
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

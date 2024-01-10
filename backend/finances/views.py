@@ -2,11 +2,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Finances, Expense
-from .serializers import FinancesSerializer, ExpenseSerializer, UserSerializer, UserCheckSerializer, UserUpdateSerializer
+from .models import Finances, Expense, Expenses
+from .serializers import FinancesSerializer, ExpenseSerializer, UserSerializer, UserCheckSerializer, UserUpdateSerializer, ExpensesSerializer
 
 class ExpenseListCreateView(generics.ListCreateAPIView):
     queryset = Expense.objects.all()
@@ -104,36 +105,60 @@ class ListUsers(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 # --------------------------------------------------------------------------
 
-# ------------------------------- Expence ----------------------------------
-@api_view(['DELETE'])
-def delete_expense(request, expense_id):
-    # Przy usuwaniu chłop nie wykorzystuje starych ID'ków. Kinda cringe
-    try:
-        expense = Expense.objects.get(pk=expense_id)
-    except Expense.DoesNotExist:
-        return Response({"error": f"Expense with ID {expense_id} does not exist"}, status=status.HTTP_404_NOT_FOUND)
+# ------------------------------- Expences ---------------------------------
+class ExpensesList(generics.ListAPIView):
+    queryset = Expenses.objects.all()
+    serializer_class = ExpensesSerializer
 
-    serializer = ExpenseSerializer(expense)
-    expense.delete()
-
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def get_expenses(request):
-    expenses = Expense.objects.all()
-    serializer = ExpenseSerializer(expenses, many=True)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def add_expense(request):
-    serializer = ExpenseSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# --------------------------------------------------------------------------
+class ExpensesListDeleteAll(generics.ListCreateAPIView):
+    queryset = Expenses.objects.all()
+    serializer_class = ExpensesSerializer
+    
+    def delete(self, request, user_id, expense_id, *args, **kwargs):
+        try:
+            expense = Expenses.objects.get(id=expense_id, User__id=user_id)
+            serializer = self.get_serializer(expense)
+            expense.delete()
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        except Expenses.DoesNotExist:
+            return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class ExpensesListGetExpenses(generics.ListCreateAPIView):
+    queryset = Expenses.objects.all()
+    serializer_class = ExpensesSerializer
+ 
+    def get(self, request, user_id, format=None):
+        try:
+            user = User.objects.get(pk=user_id)
+            expenses = Expenses.objects.filter(User=user)
+            serializer = ExpensesSerializer(expenses, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Expenses.DoesNotExist:
+            return Response({"error": "Expenses not found for the specified user."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+     
+
+class ExpensesListCreate(generics.ListCreateAPIView):
+    queryset = Expenses.objects.all()
+    serializer_class = ExpensesSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+ # --------------------------------------------------------------------------
+           
 @api_view(['GET'])
 def getData(request):
     items = Finances.objects.all()
