@@ -24,22 +24,17 @@ def users_get(request):
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
 
-        # Check if the user exists and the password is correct
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # User exists, return user credentials
             return Response({
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
             }, status=status.HTTP_200_OK)
         else:
-            # User doesn't exist, return empty fields
             return Response({
-                'id': None,
-                'username': '',
-                'email': '',
+                'error': 'Invalid username or password.',
             }, status=status.HTTP_404_NOT_FOUND)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -50,21 +45,22 @@ def users_register(request):
     password = request.data.get('password', '')
     email = request.data.get('email', '')
 
-    # Check if the user already exists
-    existing_user = User.objects.filter(username=username).first()
+    existing_user_username = User.objects.filter(username=username).first()
+    existing_user_email = User.objects.filter(email=email).first()
 
-    if existing_user:
-        # User already exists, return empty fields
+    if existing_user_username or existing_user_email:
+        error_message = {}
+        if existing_user_username:
+            error_message['username'] = 'User with this username already exists.'
+        if existing_user_email:
+            error_message['email'] = 'User with this email already exists.'
+            
         return Response({
-            'id': None,
-            'username': '',
-            'email': '',
+            'error': error_message,
         }, status=status.HTTP_400_BAD_REQUEST)
     else:
-        # Create a new user
         new_user = User.objects.create_user(username=username, password=password, email=email)
 
-        # Return a response with the user data
         return Response({
             'id': new_user.id,
             'username': new_user.username,
@@ -76,11 +72,15 @@ class UpdateUser(APIView):
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         existing_user_with_email = User.objects.filter(email=request.data.get('email')).exclude(id=user_id).first()
         if existing_user_with_email:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Another user with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        existing_user_with_username = User.objects.filter(username=request.data.get('username')).exclude(id=user_id).first()
+        if existing_user_with_username:
+            return Response({'error': 'Another user with this username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)
 
@@ -107,6 +107,11 @@ class ExpensesListDeleteAll(generics.ListCreateAPIView):
     serializer_class = ExpensesSerializer
     
     def delete(self, request, user_id, expense_id, *args, **kwargs):
+        try:
+            user_exists = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
         try:
             expense = Expenses.objects.get(id=expense_id, User__id=user_id)
             serializer = self.get_serializer(expense)
@@ -141,6 +146,13 @@ class ExpensesListCreate(generics.ListCreateAPIView):
     serializer_class = ExpensesSerializer
 
     def create(self, request, *args, **kwargs):
+        user_id = request.data.get('User', None)
+
+        try:
+            user_exists = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -157,6 +169,13 @@ class KryptosListCreateView(generics.ListCreateAPIView):
     serializer_class = KryptosSerializer
 
     def create(self, request, *args, **kwargs):
+        user_id = request.data.get('UserID', None)
+
+        try:
+            user_exists = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -179,7 +198,7 @@ class KryptosForUserView(generics.ListAPIView):
             user = User.objects.get(pk=user_id)
             return Kryptos.objects.filter(UserID=user)
         except User.DoesNotExist:
-            return None  # Return None to handle the case where the user is not found
+            return None
 
     def list(self, request, *args, **kwargs):
         try:
@@ -200,7 +219,7 @@ class KryptoDeleteView(generics.DestroyAPIView):
         try:
             user = User.objects.get(pk=user_id)
             krypto = Kryptos.objects.get(id=krypto_id, UserID=user)
-            deleted_data = KryptosSerializer(krypto).data  # Serialize the deleted data
+            deleted_data = KryptosSerializer(krypto).data
             krypto.delete()
             return Response(deleted_data, status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
