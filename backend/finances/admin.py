@@ -1,9 +1,11 @@
-from django.contrib import admin
-from .models import Finances
+from django.contrib import admin # type: ignore
+from .models import Expenses, Kryptos
 
-# Register your models here.
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ('Title', 'Amount', 'Date', 'Category', 'User')
+    
+class KryptoAdmin(admin.ModelAdmin):
+    list_display = ('Coin', 'Amount', 'Worth', 'UserID')
 
-class FinancesAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'completed')
-
-admin.site.register(Finances, FinancesAdmin)
+admin.site.register(Expenses, ExpenseAdmin)
+admin.site.register(Kryptos, KryptoAdmin)
