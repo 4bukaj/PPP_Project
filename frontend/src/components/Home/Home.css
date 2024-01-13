@@ -1,0 +1,47 @@
+.home-container {
+  max-height: 100vh;
+  display: flex;
+  justify-content: space-around;
+}
+
+@media screen and (max-width: 1199px) {
+  .home-container {
+    flex-direction: column-reverse;
+    max-height: initial;
+  }
+}
+
+.home-chart__container {
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.home-expenses__container {
+  min-width: 45%;
+  height: auto;
+}
+
+.home-container > div {
+  margin-bottom: 30px;
+}
+
+.home__last-expenses {
+  background-color: var(--secondary);
+}
+
+.noTransactions {
+  width: 100%;
+  height: 100%;
+  padding-top: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-chart__container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}

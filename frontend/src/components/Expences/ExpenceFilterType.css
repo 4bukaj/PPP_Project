@@ -1,0 +1,4 @@
+.select-box__container > div > select {
+    height: 62px;
+    text-align: left;
+}

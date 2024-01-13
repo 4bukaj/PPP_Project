@@ -41,9 +41,9 @@ def users_get(request):
 
 @api_view(['POST'])
 def users_register(request):
-    username = request.data.get('username', '')
-    password = request.data.get('password', '')
     email = request.data.get('email', '')
+    username = request.data.get('email', '')
+    password = request.data.get('password', '')
 
     existing_user_username = User.objects.filter(username=username).first()
     existing_user_email = User.objects.filter(email=email).first()

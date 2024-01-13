@@ -1,0 +1,18 @@
+.crypto-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.crypto-form-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  width: 700px;
+}
+
+.crypto-form__controls > div {
+  width: 200px;
+}
