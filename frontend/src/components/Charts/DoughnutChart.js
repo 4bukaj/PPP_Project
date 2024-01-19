@@ -18,21 +18,21 @@ export default function DoughnutChart({ data, activeFilter }) {
   //FIRESTORE COLLECTION
   const [transactions, setTransactions] = useState([]);
   const transactionsCollectionRef = collection(db, "transactions");
-  const { currentUser } = useAuth();
-  const filterByUserQuery = query(
-    transactionsCollectionRef,
-    where("userID", "==", currentUser.uid)
-  );
+  // const { currentUser } = useAuth();
+  // const filterByUserQuery = query(
+  //   transactionsCollectionRef,
+  //   where("userID", "==", currentUser.uid)
+  // );
   const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    const getTransactions = async () => {
-      const data = await getDocs(filterByUserQuery);
-      setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
+  // useEffect(() => {
+  //   const getTransactions = async () => {
+  //     const data = await getDocs(filterByUserQuery);
+  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
 
-    getTransactions();
-  }, [refreshKey]);
+  //   getTransactions();
+  // }, [refreshKey]);
 
   const updateRefreshKey = () => {
     setRefreshKey(refreshKey + 1);
@@ -46,7 +46,7 @@ export default function DoughnutChart({ data, activeFilter }) {
   const filteredTransactions = transactions.filter(function (e) {
     switch (activeFilter) {
       case "all":
-        return currentUser.uid === e.userID;
+        return 123 === e.userID;
         break;
       case "thisMonth":
         if (new Date().getMonth() === 0) {

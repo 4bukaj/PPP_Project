@@ -16,7 +16,7 @@ import CryptoPortfolio from "./CryptoPortfolio";
 export default function Crypto() {
   const [isOpen, setIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
   const [crypto, setCrypto] = useState([]);
   const [totalInvestments, setTotalInvestments] = useState();
   const [currentInvestments, setCurrentInvestments] = useState();
@@ -26,10 +26,10 @@ export default function Crypto() {
   const [dailyPNLpercentage, setDailyPNLpercentage] = useState(0);
   //FIRESTORE COLLECTION
   const cryptoCollectionRef = collection(db, "crypto");
-  const filterByUserQuery = query(
-    cryptoCollectionRef,
-    where("userID", "==", currentUser.uid)
-  );
+  // const filterByUserQuery = query(
+  //   cryptoCollectionRef,
+  //   where("userID", "==", currentUser.uid)
+  // );
 
   //PULING CRYPTO FROM API
   const [allCoins, setAllCoins] = useState([]);
@@ -60,13 +60,13 @@ export default function Crypto() {
 
   //PULLING CRYPTO FROM FIREBASE
 
-  useEffect(() => {
-    const getCrypto = async () => {
-      const data = await getDocs(filterByUserQuery);
-      setCrypto(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getCrypto();
-  }, [refreshKey]);
+  // useEffect(() => {
+  //   const getCrypto = async () => {
+  //     const data = await getDocs(filterByUserQuery);
+  //     setCrypto(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
+  //   getCrypto();
+  // }, [refreshKey]);
 
   //CALCULATING PORTFOLIO NUMBERS
   useEffect(() => {

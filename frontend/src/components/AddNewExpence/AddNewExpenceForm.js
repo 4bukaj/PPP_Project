@@ -5,7 +5,7 @@ import { categoriesList } from "../Expences/ExpencesCategories.js";
 import ExpenceCategoryItem from "./ExpenceCategoryItem";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { useAuth } from "../../contexts/AuthContext";
+// import { useAuth } from "../../contexts/AuthContext";
 
 //SCROLLING DOWN FUNCTION
 let isDown = false;
@@ -40,7 +40,7 @@ const today = new Date().toISOString().split("T")[0];
 
 export default function ModalForm(props) {
   const transactionsCollectionRef = collection(db, "transactions");
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState(today);
@@ -71,7 +71,7 @@ export default function ModalForm(props) {
     console.log(passDate);
 
     await addDoc(transactionsCollectionRef, {
-      userID: currentUser.uid,
+      userID: 123,
       title: enteredTitle,
       amount: enteredAmount,
       date: passDate,

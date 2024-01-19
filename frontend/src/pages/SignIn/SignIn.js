@@ -12,6 +12,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { isEmptyObject } from "../../utils";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 export default function SignIn() {
   const {
@@ -19,42 +20,44 @@ export default function SignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "kuba@dev.com",
+      password: "admin1",
+    },
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const signIn = useSignIn();
 
   const onSubmit = (data) => {
-    // try {
-    //   setEmailError("");
-    //   setPasswordError("");
-    //   setLoading(true);
-    //   // await login(emailRef.current.value, passwordRef.current.value);
-    //   axios
-    //     .post("http://127.0.0.1:8000/users/get/", {
-    //       username: "lolo",
-    //       password: "lolo",
-    //     })
-    //     .then((response) => console.log(response))
-    //     .catch((e) => console.log(e));
-    //   navigate("/home");
-    // } catch (error) {
-    //   console.log(error.code);
-    //   switch (error.code) {
-    //     case "auth/invalid-email":
-    //       setEmailError("Wrong email format");
-    //       break;
-    //     case "auth/user-not-found":
-    //       setEmailError("User not found");
-    //       break;
-    //     case "auth/wrong-password":
-    //       setPasswordError("Wrong password");
-    //       break;
-    //     default:
-    //       setEmailError(error.message);
-    //       break;
-    //   }
-    // }
-    // setLoading(false);
+    setLoading(true);
+
+    const formData = {
+      username: data.email,
+      password: data.password,
+    };
+
+    axios
+      .post("http://127.0.0.1:8000/api/token/", formData)
+      .then((response) => {
+        const { access, refresh } = response.data;
+
+        signIn({
+          auth: {
+            token: access,
+            type: "Bearer",
+          },
+          userState: {
+            email: data.email,
+            uid: 123,
+          },
+        });
+
+        navigate("/");
+      });
+
+    setLoading(false);
   };
 
   return (

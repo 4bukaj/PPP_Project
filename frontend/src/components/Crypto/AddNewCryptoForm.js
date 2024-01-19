@@ -21,7 +21,7 @@ export default function AddNewCryptoForm({
 
   //CONNECT WITH FIREBASE
   const cryptoCollectionRef = collection(db, "crypto");
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
   const [enteredCoin, setEnteredCoin] = useState();
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredValue, setEnteredValue] = useState("");
@@ -30,15 +30,15 @@ export default function AddNewCryptoForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await addDoc(cryptoCollectionRef, {
-      userID: currentUser.uid,
-      amount: enteredAmount,
-      coin: enteredCoin,
-      date: new Date(),
-      image: "",
-      value: enteredValue,
-    });
-    onClose();
+    // await addDoc(cryptoCollectionRef, {
+    //   userID: currentUser.uid,
+    //   amount: enteredAmount,
+    //   coin: enteredCoin,
+    //   date: new Date(),
+    //   image: "",
+    //   value: enteredValue,
+    // });
+    // onClose();
   };
 
   const handleValueCalc = (e) => {

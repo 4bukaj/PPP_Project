@@ -3,40 +3,29 @@ import { SidebarData } from "./SidebarData";
 import "./SideNav.css";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 export default function SideNav() {
-  //LOGOUT, USER DATA
-  const [error, setError] = useState("");
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      navigate("/signin");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
-  //---------END ------------------
-
   const [sidebar, setSidebar] = useState(true);
   const expandSidebar = () => setSidebar(!sidebar);
   const menuItems = [{ id: 1 }, { id: 2 }, { id: 3 }];
-
   const [itemState, setItemState] = useState({
     activeItem: menuItems[0],
     items: menuItems,
   });
+  const signOut = useSignOut();
+  const navigate = useNavigate();
 
-  function toggleActive(index) {
+  const handleLogout = async () => {
+    signOut();
+    navigate("/signin");
+  };
+
+  const toggleActive = (index) => {
     setItemState({ ...itemState, activeItem: itemState.items[index] });
-  }
+  };
 
   function toggleActiveStyles(index) {
     if (itemState.items[index] === itemState.activeItem) {

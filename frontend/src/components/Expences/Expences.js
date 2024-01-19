@@ -57,11 +57,11 @@ export default function Expences(props) {
   const [transactions, setTransactions] = useState([]);
   //FIRESTORE COLLECTION
   const transactionsCollectionRef = collection(db, "transactions");
-  const { currentUser } = useAuth();
-  const filterByUserQuery = query(
-    transactionsCollectionRef,
-    where("userID", "==", currentUser.uid)
-  );
+  // const { currentUser } = useAuth();
+  // const filterByUserQuery = query(
+  //   transactionsCollectionRef,
+  //   where("userID", "==", currentUser.uid)
+  // );
 
   //OTHER
   const [refreshKey, setRefreshKey] = useState(0);
@@ -75,14 +75,14 @@ export default function Expences(props) {
   let thisMonthTotalSum = 0;
 
   //PULLING TRANSACTIONS FROM FIREBASE
-  useEffect(() => {
-    const getTransactions = async () => {
-      const data = await getDocs(filterByUserQuery);
-      setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
+  // useEffect(() => {
+  //   const getTransactions = async () => {
+  //     const data = await getDocs(filterByUserQuery);
+  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
 
-    getTransactions();
-  }, [refreshKey]);
+  //   getTransactions();
+  // }, [refreshKey]);
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
@@ -105,43 +105,45 @@ export default function Expences(props) {
     setRefreshKey(refreshKey + 1);
   };
 
-  //FILTERING TRANSACTIONS ARRAY
-  const filteredTransactions = transactions
-    .filter(function (e) {
-      switch (selectedFilter) {
-        case "all":
-          return currentUser.uid === e.userID;
-          break;
-        case "thisMonth":
-          return (
-            new Date(e.date.seconds * 1000).getMonth() === monthToday &&
-            new Date(e.date.seconds * 1000).getFullYear() === yearToday
-          );
-          break;
-        case "thisYear":
-          return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
-          break;
-        case "lastMonth":
-          if (new Date().getMonth() === 0) {
-            return (
-              new Date(e.date.seconds * 1000).getMonth() === 11 &&
-              new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
-            );
-          } else {
-            return (
-              new Date(e.date.seconds * 1000).getMonth() === monthToday - 1 &&
-              new Date(e.date.seconds * 1000).getFullYear() === yearToday
-            );
-          }
-          break;
-        case "lastYear":
-          return (
-            new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
-          );
-          break;
-      }
-    })
-    .sort();
+  // //FILTERING TRANSACTIONS ARRAY
+  // const filteredTransactions = transactions
+  //   .filter(function (e) {
+  //     switch (selectedFilter) {
+  //       case "all":
+  //         return currentUser.uid === e.userID;
+  //         break;
+  //       case "thisMonth":
+  //         return (
+  //           new Date(e.date.seconds * 1000).getMonth() === monthToday &&
+  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday
+  //         );
+  //         break;
+  //       case "thisYear":
+  //         return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
+  //         break;
+  //       case "lastMonth":
+  //         if (new Date().getMonth() === 0) {
+  //           return (
+  //             new Date(e.date.seconds * 1000).getMonth() === 11 &&
+  //             new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
+  //           );
+  //         } else {
+  //           return (
+  //             new Date(e.date.seconds * 1000).getMonth() === monthToday - 1 &&
+  //             new Date(e.date.seconds * 1000).getFullYear() === yearToday
+  //           );
+  //         }
+  //         break;
+  //       case "lastYear":
+  //         return (
+  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
+  //         );
+  //         break;
+  //     }
+  //   })
+  //   .sort();
+
+  const filteredTransactions = [];
 
   //PASSING FILTERRED TRANSACTIONS ARRAY TO PARENT
   useEffect(() => {

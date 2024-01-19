@@ -24,21 +24,21 @@ export function hexToRgbA(hex) {
 export default function Charts(props) {
   //PULL TRANSACTIONS FROM DATABASE
   const [transactions, setTransactions] = useState([]);
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
   const transactionsCollectionRef = collection(db, "transactions");
-  const filterByUserQuery = query(
-    transactionsCollectionRef,
-    where("userID", "==", currentUser.uid)
-  );
+  // const filterByUserQuery = query(
+  //   transactionsCollectionRef,
+  //   where("userID", "==", currentUser.uid)
+  // );
 
-  useEffect(() => {
-    const getTransactions = async () => {
-      const data = await getDocs(filterByUserQuery);
-      setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
+  // useEffect(() => {
+  //   const getTransactions = async () => {
+  //     const data = await getDocs(filterByUserQuery);
+  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
 
-    getTransactions();
-  }, []);
+  //   getTransactions();
+  // }, []);
 
   //REST
   const expensesByCategoriesMonth = [];
