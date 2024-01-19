@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Signup.css";
+import "./styles.css";
 import { Link, useNavigate } from "react-router-dom";
 //MUI IMPORTS
 import CssBaseline from "@mui/material/CssBaseline";

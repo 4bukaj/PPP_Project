@@ -1,9 +1,9 @@
 import React from "react";
 import "./App.css";
 
-import SignUp from "./pages/SignUp/Signup";
-import SignIn from "./pages/SignIn/SignIn";
-import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import ResetPassword from "./pages/ResetPassword";
 
 import createStore from "react-auth-kit/createStore";
 import AuthProvider from "react-auth-kit";
@@ -11,10 +11,10 @@ import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Dashboard from "./components/Dashboard/Dashboard";
-import ChartsDashboard from "./components/Charts/ChartsDashboard";
-import Crypto from "./components/Crypto/Crypto";
-import Home from "./components/Home/Home";
+import Dashboard from "./pages/Dashboard";
+import Crypto from "./pages/Crypto";
+import Home from "./pages/Home";
+import Charts from "./pages/Charts";
 
 const theme = createTheme({
   palette: {
@@ -56,7 +56,7 @@ function App() {
               }
             >
               <Route path="/home" element={<Home />} />
-              <Route path="/charts" element={<ChartsDashboard />} />
+              <Route path="/charts" element={<Charts />} />
               <Route path="/crypto" element={<Crypto />} />
             </Route>
             <Route path="/signup" element={<SignUp />} />

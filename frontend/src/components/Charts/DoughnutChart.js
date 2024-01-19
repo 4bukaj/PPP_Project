@@ -1,7 +1,7 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { categoriesList } from "../Expences/ExpencesCategories";
-import { hexToRgbA } from "./ChartsDashboard";
+import { hexToRgbA } from "../../pages/Charts";
 import Chart from "chart.js/auto";
 import "./DoughnutChart.css";
 import { numberWithCommas } from "../Crypto/CryptoCarousel";

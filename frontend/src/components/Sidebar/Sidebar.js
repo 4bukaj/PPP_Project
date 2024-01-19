@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { SidebarData } from "./SidebarData";
-import "./SideNav.css";
+import { SidebarData } from "./utils";
+import "./Sidebar.css";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { Link, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 
-export default function SideNav() {
+export default function Sidebar() {
   const [sidebar, setSidebar] = useState(true);
   const expandSidebar = () => setSidebar(!sidebar);
   const menuItems = [{ id: 1 }, { id: 2 }, { id: 3 }];

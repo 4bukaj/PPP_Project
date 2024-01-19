@@ -1,7 +1,6 @@
 import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 
 export const SidebarData = [

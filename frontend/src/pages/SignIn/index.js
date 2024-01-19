@@ -39,23 +39,28 @@ export default function SignIn() {
     };
 
     axios
-      .post("http://127.0.0.1:8000/api/token/", formData)
-      .then((response) => {
-        const { access, refresh } = response.data;
+      .all([
+        axios.post("http://127.0.0.1:8000/users/get/", formData),
+        axios.post("http://127.0.0.1:8000/api/token/", formData),
+      ])
+      .then(
+        axios.spread((userData, session) => {
+          console.log(userData);
+          signIn({
+            auth: {
+              token: session.data.access,
+              type: "Bearer",
+            },
+            userState: {
+              id: userData.data.id,
+              username: userData.data.username,
+              email: userData.data.email,
+            },
+          });
 
-        signIn({
-          auth: {
-            token: access,
-            type: "Bearer",
-          },
-          userState: {
-            email: data.email,
-            uid: 123,
-          },
-        });
-
-        navigate("/");
-      });
+          navigate("/home");
+        })
+      );
 
     setLoading(false);
   };

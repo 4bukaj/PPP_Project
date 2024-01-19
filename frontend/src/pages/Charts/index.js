@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "./ChartsDashboard.css";
-import BarChart from "./BarChart";
-import { db } from "../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useAuth } from "../../contexts/AuthContext";
-import { categoriesList } from "../Expences/ExpencesCategories";
+import "./styles.css";
+import BarChart from "../../components/Charts/BarChart";
+import { categoriesList } from "../../components/Expences/ExpencesCategories";
 
 export function hexToRgbA(hex) {
   var c;
@@ -25,7 +22,6 @@ export default function Charts(props) {
   //PULL TRANSACTIONS FROM DATABASE
   const [transactions, setTransactions] = useState([]);
   // const { currentUser } = useAuth();
-  const transactionsCollectionRef = collection(db, "transactions");
   // const filterByUserQuery = query(
   //   transactionsCollectionRef,
   //   where("userID", "==", currentUser.uid)

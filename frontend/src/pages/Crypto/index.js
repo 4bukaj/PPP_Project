@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import "./Crypto.css";
+import "./styles.css";
 import { useAuth } from "../../contexts/AuthContext";
-import CryptoCarousel from "./CryptoCarousel";
+import CryptoCarousel from "../../components/Crypto/CryptoCarousel";
 import { db } from "../../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import HeaderItem from "./HeaderItem";
-import CoinsList from "./CoinsList";
+import HeaderItem from "../../components/Crypto/HeaderItem";
+import CoinsList from "../../components/Crypto/CoinsList";
 import { CoinList } from "../../config/api";
 import axios from "axios";
-import { numberWithCommas } from "./CryptoCarousel";
-import AddNewExpence from "../AddNewExpence/AddNewExpence";
+import { numberWithCommas } from "../../components/Crypto/CryptoCarousel";
+import AddNewExpence from "../../components/AddNewExpence/AddNewExpence";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import CryptoPortfolio from "./CryptoPortfolio";
+import CryptoPortfolio from "../../components/Crypto/CryptoPortfolio";
 
 export default function Crypto() {
   const [isOpen, setIsOpen] = useState(false);

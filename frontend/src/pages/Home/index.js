@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./Home.css";
-import Expences from "../Expences/Expences";
-import DoughnutChart from "../Charts/DoughnutChart";
+import "./styles.css";
+import Expences from "../../components/Expences/Expences";
+import DoughnutChart from "../../components/Charts/DoughnutChart";
 import { motion } from "framer-motion";
 
 export default function Home() {

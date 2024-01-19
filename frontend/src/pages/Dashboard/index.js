@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import "./Dashboard.css";
-import SideNav from "./SideNav";
+import "./styles.css";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
 export default function Dashboard() {
+  const auth = useAuthUser();
+  console.log(auth);
   return (
     <div className="dashboard-container">
-      <SideNav />
+      <Sidebar />
       <div className="dashboard-content">
         <Outlet />
       </div>
