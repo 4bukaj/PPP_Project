@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { categoriesList } from "../Expences/utils";
-import { hexToRgbA } from "../../pages/Charts";
+import { hexToRgbA } from "../../utils";
 import "./DoughnutChart.css";
 import { numberWithCommas } from "../Crypto/CryptoCarousel";
 import { ExpensesContext } from "../../contexts/ExpensesContext";

@@ -1,42 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import "./styles.css";
 import BarChart from "../../components/Charts/BarChart";
 import { categoriesList } from "../../components/Expences/utils";
-
-export function hexToRgbA(hex) {
-  var c;
-  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split("");
-    if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c = "0x" + c.join("");
-    return (
-      "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.4)"
-    );
-  }
-  throw new Error("Bad Hex");
-}
+import { hexToRgbA } from "../../utils";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
+import { getMonth, isThisMonth, isThisYear } from "date-fns";
 
 export default function Charts(props) {
-  //PULL TRANSACTIONS FROM DATABASE
-  const [transactions, setTransactions] = useState([]);
-  // const { currentUser } = useAuth();
-  // const filterByUserQuery = query(
-  //   transactionsCollectionRef,
-  //   where("userID", "==", currentUser.uid)
-  // );
+  const { expenses } = useContext(ExpensesContext);
 
-  // useEffect(() => {
-  //   const getTransactions = async () => {
-  //     const data = await getDocs(filterByUserQuery);
-  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-
-  //   getTransactions();
-  // }, []);
-
-  //REST
   const expensesByCategoriesMonth = [];
   const expensesByCategoriesYear = [];
   const biggestExpenses = [];
@@ -59,46 +31,40 @@ export default function Charts(props) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  const today = new Date();
-  const yearToday = Number(today.getFullYear());
-  const monthToday = Number(today.getMonth());
+  const transactionsThisMonth = expenses.filter((e) =>
+    isThisMonth(new Date(e.Date))
+  );
 
-  const transactionsThisMonth = transactions.filter(function (e) {
-    return (
-      new Date(e.date.seconds * 1000).getMonth() === monthToday &&
-      new Date(e.date.seconds * 1000).getFullYear() === yearToday
-    );
-  });
+  const transactionsThisYear = expenses.filter((e) =>
+    isThisYear(new Date(e.Date))
+  );
+  console.log(transactionsThisYear);
 
-  const transactionsThisYear = transactions.filter(function (e) {
-    return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
-  });
+  for (const expense of transactionsThisYear) {
+    const expenseMonth = getMonth(new Date(expense.Date));
+    console.log(expense);
 
-  for (const expense in transactionsThisYear) {
-    const expenseMonth = new Date(
-      transactionsThisYear[expense].date.seconds * 1000
-    ).getMonth();
     expensesByMonths[expenseMonth].value += Number(
-      transactionsThisYear[expense].amount
+      transactionsThisYear.find((t) => t.id === expense.id).Amount
     );
   }
 
   transactionsThisMonth.forEach((item) => {
-    let cur = expensesByCategoriesMonth.find((x) => x.label === item.category);
+    let cur = expensesByCategoriesMonth.find((x) => x.label === item.Category);
     if (cur) {
-      cur.value += Number(item.amount);
+      cur.value += Number(item.Amount);
     } else {
       expensesByCategoriesMonth.push({
-        label: item.category,
-        value: Number(item.amount),
-        bgColor: categoriesList.find((x) => x.id === item.category).color,
+        label: item.Category,
+        value: Number(item.Amount),
+        bgColor: categoriesList[item.Category].color,
       });
     }
     //BIGGEST EXPENSE
     biggestExpenses.push({
-      label: item.title,
-      value: Number(item.amount),
-      bgColor: categoriesList.find((x) => x.id === item.category).color,
+      label: item.Title,
+      value: Number(item.Amount),
+      bgColor: categoriesList[item.Category].color,
     });
   });
 
@@ -107,14 +73,14 @@ export default function Charts(props) {
     .slice(0, 5);
 
   transactionsThisYear.forEach((item) => {
-    let cur = expensesByCategoriesYear.find((x) => x.label === item.category);
+    let cur = expensesByCategoriesYear.find((x) => x.label === item.Category);
     if (cur) {
-      cur.value += Number(item.amount);
+      cur.value += Number(item.Amount);
     } else {
       expensesByCategoriesYear.push({
-        label: item.category,
-        value: Number(item.amount),
-        bgColor: categoriesList.find((x) => x.id === item.category).color,
+        label: item.Category,
+        value: Number(item.Amount),
+        bgColor: categoriesList[item.Category].color,
       });
     }
   });
