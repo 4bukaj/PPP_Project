@@ -1,5 +1,5 @@
 import React from "react";
-import { categoriesList } from "./ExpencesCategories";
+import { categoriesList } from "./utils";
 import { motion } from "framer-motion";
 
 const today = new Date();

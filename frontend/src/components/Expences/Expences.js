@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Expences.css";
 import ExpenceItem from "./ExpenceItem";
-import { db } from "../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useAuth } from "../../contexts/AuthContext";
 import AddNewExpence from "../AddNewExpence/AddNewExpence";
 import ExpencesFilterType from "./ExpencesFilterType";
-import { categoriesList } from "./ExpencesCategories";
+import { categoriesList } from "./utils";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
 
 //SCROLLING DOWN FUNCTION
 let isDown = false;
@@ -46,22 +44,16 @@ const mouseMove = (e) => {
 };
 
 export default function Expences(props) {
+  const { expenses } = useContext(ExpensesContext);
   //DATES FOR FILTERING
   const today = new Date();
   const yearToday = Number(today.getFullYear());
   const monthToday = Number(today.getMonth());
-  const defaultCategory = categoriesList[0].id;
+  const defaultCategory = null;
 
   //NEW EXPENSE POPUP
   const [isOpen, setIsOpen] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  //FIRESTORE COLLECTION
-  const transactionsCollectionRef = collection(db, "transactions");
-  // const { currentUser } = useAuth();
-  // const filterByUserQuery = query(
-  //   transactionsCollectionRef,
-  //   where("userID", "==", currentUser.uid)
-  // );
 
   //OTHER
   const [refreshKey, setRefreshKey] = useState(0);
@@ -143,8 +135,7 @@ export default function Expences(props) {
   //   })
   //   .sort();
 
-  const filteredTransactions = [];
-
+  const filteredTransactions = expenses;
   //PASSING FILTERRED TRANSACTIONS ARRAY TO PARENT
   useEffect(() => {
     const handleFiltering = () =>
@@ -198,10 +189,10 @@ export default function Expences(props) {
             return (
               <ExpenceItem
                 key={transaction.id}
-                title={transaction.title}
-                amount={transaction.amount}
-                date={transaction.date}
-                category={transaction.category}
+                title={transaction.Title}
+                amount={transaction.Amount}
+                date={transaction.Date}
+                category={transaction.Category}
                 expenceID={transaction.id}
                 onUpdate={updateRefreshKey}
               />

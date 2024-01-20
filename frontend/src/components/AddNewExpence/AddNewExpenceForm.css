@@ -13,10 +13,6 @@
   width: 700px;
 }
 
-.modal-form__controls > div {
-  width: 200px;
-}
-
 .textfield__label-modal {
   color: var(--dark) !important;
 }

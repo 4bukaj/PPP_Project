@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import "./AddNewExpenceForm.css";
-import { categoriesList } from "../Expences/ExpencesCategories.js";
+import { categoriesList } from "../Expences/utils.js";
 import ExpenceCategoryItem from "./ExpenceCategoryItem";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebase";
-// import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
+import { ExpensesContext } from "../../contexts/ExpensesContext.js";
+import { useForm } from "react-hook-form";
+import { format } from "date-fns";
+import { isEmptyObject } from "../../utils.js";
 
 //SCROLLING DOWN FUNCTION
 let isDown = false;
@@ -39,92 +41,106 @@ const mouseMove = (e) => {
 const today = new Date().toISOString().split("T")[0];
 
 export default function ModalForm(props) {
-  const transactionsCollectionRef = collection(db, "transactions");
-  // const { currentUser } = useAuth();
-  const [enteredTitle, setEnteredTitle] = useState("");
-  const [enteredAmount, setEnteredAmount] = useState("");
-  const [enteredDate, setEnteredDate] = useState(today);
-  const [enteredCategory, setEnteredCategory] = useState("");
+  const { session, setExpenses } = useContext(ExpensesContext);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      date: today,
+    },
+  });
+  const [category, setCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleTitleChange = (event) => {
-    setEnteredTitle(event.target.value);
-  };
+  const onSubmit = async (data) => {
+    setIsLoading(true);
 
-  const handleAmountChange = (event) => {
-    setEnteredAmount(event.target.value);
-  };
+    axios
+      .post("http://127.0.0.1:8000/expenses/add/", {
+        Title: data.title,
+        Amount: data.amount,
+        Date: "2024-01-16",
+        Category: category,
+        User: session.id,
+      })
+      .then((response) => {
+        axios
+          .get(`http://127.0.0.1:8000/expenses/user/${session.id}`)
+          .then((res) => {
+            setExpenses(res.data);
+          })
+          .catch((e) => console.log(e));
+      })
+      .catch((e) => console.log(e));
 
-  const handleDateChange = (event) => {
-    setEnteredDate(event.target.value);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const now = new Date();
-    const secs = now.getSeconds();
-    const mins = now.getMinutes() * 60;
-    const hours = now.getHours() * 3600;
-    const passDate = new Date(
-      (new Date(enteredDate).getTime() / 1000 + hours + mins + secs) * 1000
-    );
-
-    console.log(passDate);
-
-    await addDoc(transactionsCollectionRef, {
-      userID: 123,
-      title: enteredTitle,
-      amount: enteredAmount,
-      date: passDate,
-      category: enteredCategory,
-    });
+    setIsLoading(false);
     props.onClose();
   };
 
-  //RENDER CATEGORIES BOXES
-  const renderCategories = categoriesList.map((category) => (
+  const renderCategories = Object.values(categoriesList).map((category) => (
     <ExpenceCategoryItem
       id={category.id}
       key={category.id}
       title={category.title}
       icon={category.icon}
       color={category.color}
-      setEnteredCategory={setEnteredCategory}
+      setCategory={setCategory}
     />
   ));
 
   return (
-    <form onSubmit={handleSubmit} className="modal-form">
+    <form onSubmit={handleSubmit(onSubmit)} className="modal-form">
       <div className="modal-form__controls">
-        <TextField
-          required
-          name="title"
-          label="Title"
-          variant="outlined"
-          type={"text"}
-          value={enteredTitle}
-          onChange={handleTitleChange}
-          InputLabelProps={{ className: "textfield__label-modal" }}
-        />
-        <TextField
-          required
-          name="amount"
-          label="Amount"
-          variant="outlined"
-          type={"number"}
-          value={enteredAmount}
-          onChange={handleAmountChange}
-          InputLabelProps={{ className: "textfield__label-modal" }}
-        />
-        <TextField
-          required
-          name="date"
-          label="Date"
-          variant="outlined"
-          type={"date"}
-          value={enteredDate}
-          onChange={handleDateChange}
-          InputLabelProps={{ className: "textfield__label-modal" }}
-        />
+        <Grid container columnSpacing={2}>
+          <Grid item xs={4}>
+            <TextField
+              fullWidth
+              label="Title"
+              variant="outlined"
+              type={"text"}
+              {...register("title", {
+                required: "Title is required",
+              })}
+              error={!!errors?.title}
+              helperText={errors?.title?.message}
+              InputLabelProps={{ className: "textfield__label-modal" }}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              fullWidth
+              label="Amount"
+              variant="outlined"
+              type={"number"}
+              {...register("amount", {
+                required: "Amount is required",
+              })}
+              error={!!errors?.amount}
+              helperText={errors?.amount?.message}
+              InputLabelProps={{ className: "textfield__label-modal" }}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              fullWidth
+              label="Date"
+              variant="outlined"
+              type={"date"}
+              {...register("date", {
+                required: "Date is required",
+              })}
+              error={!!errors?.date}
+              helperText={errors?.date?.message}
+              InputLabelProps={{
+                className: "textfield__label-modal",
+                shrink: true,
+              }}
+            />
+          </Grid>
+        </Grid>
       </div>
       <div
         className="modal-form__category"
@@ -141,14 +157,9 @@ export default function ModalForm(props) {
           type="submit"
           className="dark-btn"
           onClick={() => props.onTransactionAdd()}
-          disabled={
-            !enteredTitle ||
-            !enteredAmount ||
-            !enteredCategory ||
-            (!enteredDate && true)
-          }
+          disabled={isLoading || !isEmptyObject(errors)}
         >
-          Add
+          Add expense
         </button>
       </div>
     </form>

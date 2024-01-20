@@ -51,7 +51,7 @@ export default function Modal({
             {/* MODAL FOR NEW TRANSACION */}
             {addNewExpence && (
               <>
-                <h2>Add new transaction</h2>
+                <h2>Add new expense</h2>
                 <AddNewExpenceForm
                   onClose={onClose}
                   onTransactionAdd={handleRefreshKeyUpdate}

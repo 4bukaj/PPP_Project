@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import "./AddNewCryptoForm.css";
-import { db } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { useAuth } from "../../contexts/AuthContext";
 
 export default function AddNewCryptoForm({
   crypto,
@@ -19,9 +16,6 @@ export default function AddNewCryptoForm({
     cryptoOptions.push(obj);
   });
 
-  //CONNECT WITH FIREBASE
-  const cryptoCollectionRef = collection(db, "crypto");
-  // const { currentUser } = useAuth();
   const [enteredCoin, setEnteredCoin] = useState();
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredValue, setEnteredValue] = useState("");

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import "./ExpenceCategory.css";
-import { categoryCheck } from "./ExpencesCategories";
+import { categoriesList } from "./utils";
 import { Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { db } from "../../firebase";
-import { deleteDoc, doc } from "firebase/firestore";
 
 export default function ExpenceCategory(props) {
   const [deleteButton, setDeleteButton] = useState(false);
@@ -12,24 +10,20 @@ export default function ExpenceCategory(props) {
   const [delayHandler, setDelayHandler] = useState(null);
 
   const handleDeleteTransaction = async () => {
-    const expenceDoc = doc(db, "transactions", props.expenceID);
-    await deleteDoc(expenceDoc);
     props.onTransactionRemove();
   };
 
   const bgColor = () => {
-    let color = 0;
-    if (removeConfirm) color = "#CF0A0A";
-    else color = categoryCheck(props.category).color;
-    return color;
+    return removeConfirm ? "#CF0A0A" : categoriesList[props.category].color;
   };
 
   const onMouseOver = () => {
-    setDelayHandler(setTimeout(() => {
-      setDeleteButton(true);
-      setRemoveConfirm(true);
-  }, 1500))
-      
+    setDelayHandler(
+      setTimeout(() => {
+        setDeleteButton(true);
+        setRemoveConfirm(true);
+      }, 1500)
+    );
   };
 
   const onMouseOut = () => {
@@ -47,13 +41,13 @@ export default function ExpenceCategory(props) {
       sx={{ backgroundColor: bgColor() }}
     >
       <div className="category-icon">
-        {deleteButton ? <DeleteIcon /> : categoryCheck(props.category).icon}
+        {deleteButton ? <DeleteIcon /> : categoriesList[props.category].icon}
       </div>
       <div className="category-title">
         {deleteButton ? (
           <span>Remove?</span>
         ) : (
-          categoryCheck(props.category).title
+          categoriesList[props.category].title
         )}
       </div>
     </Box>

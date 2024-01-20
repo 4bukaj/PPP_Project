@@ -45,7 +45,6 @@ export default function SignIn() {
       ])
       .then(
         axios.spread((userData, session) => {
-          console.log(userData);
           signIn({
             auth: {
               token: session.data.access,

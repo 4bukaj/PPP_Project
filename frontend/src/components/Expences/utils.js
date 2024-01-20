@@ -13,177 +13,96 @@ import AttractionsIcon from "@mui/icons-material/Attractions";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
-import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 
-export const categoriesList = [
-  {
+export const categoriesList = {
+  home: {
     id: "home",
     title: "Home",
     icon: <HomeIcon />,
     color: "#B09B58",
   },
-  {
+  education: {
     id: "education",
     title: "Education",
     icon: <SchoolIcon />,
     color: "#466C94",
   },
-  {
+  other: {
     id: "other",
     title: "Other",
     icon: <DifferenceIcon />,
     color: "#67696B",
   },
-  {
+  food: {
     id: "food",
     title: "Food",
     icon: <FastfoodIcon />,
     color: "#FFA506",
   },
-  {
+  travel: {
     id: "travel",
     title: "Travelling",
     icon: <PublicIcon />,
     color: "#F864A2",
   },
-  {
+  work: {
     id: "work",
     title: "Work",
     icon: <WorkIcon />,
     color: "#6E6D8C",
   },
-  {
+  gifts: {
     id: "gifts",
     title: "Gifts",
     icon: <CardGiftcardIcon />,
     color: "#0CB471",
   },
-  {
+  bills: {
     id: "bills",
     title: "Bills",
     icon: <ReceiptLongIcon />,
     color: "#5DC3AD",
   },
-  {
+  attractions: {
     id: "attractions",
     title: "Attractions",
     icon: <AttractionsIcon />,
     color: "#EE9D7D",
   },
-  {
+  car: {
     id: "car",
     title: "Car",
     icon: <DirectionsCarFilledIcon />,
     color: "#50A8E7",
   },
-  {
+  hobby: {
     id: "hobby",
     title: "Hobby",
     icon: <SportsSoccerIcon />,
     color: "#80CBC9",
   },
-  {
+  groceries: {
     id: "groceries",
     title: "Groceries",
     icon: <ShoppingBagIcon />,
     color: "#D68140",
   },
-  {
+  health: {
     id: "health",
     title: "Health",
     icon: <MedicalInformationIcon />,
     color: "#D86973",
   },
-  {
+  clothes: {
     id: "clothes",
     title: "Clothes",
     icon: <CheckroomIcon />,
     color: "#FECD1B",
   },
-  {
+  party: {
     id: "party",
     title: "Partying",
     icon: <NightlifeIcon />,
     color: "#7846CB",
   },
-];
-
-export const categoryCheck = (category) => {
-  switch (category) {
-    case "home":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "home";
-      });
-      break;
-    case "education":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "education";
-      });
-      break;
-    case "other":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "other";
-      });
-      break;
-    case "food":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "food";
-      });
-      break;
-    case "travel":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "travel";
-      });
-      break;
-    case "work":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "work";
-      });
-      break;
-    case "gifts":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "gifts";
-      });
-      break;
-    case "bills":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "bills";
-      });
-      break;
-    case "attractions":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "attractions";
-      });
-      break;
-    case "car":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "car";
-      });
-      break;
-    case "hobby":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "hobby";
-      });
-      break;
-    case "groceries":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "groceries";
-      });
-      break;
-    case "health":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "health";
-      });
-      break;
-    case "clothes":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "clothes";
-      });
-      break;
-    case "party":
-      return categoriesList.find((itemCategory) => {
-        return itemCategory.id === "party";
-      });
-      break;
-  }
 };

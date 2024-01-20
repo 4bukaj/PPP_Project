@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./styles.css";
 import Expences from "../../components/Expences/Expences";
 import DoughnutChart from "../../components/Charts/DoughnutChart";
 import { motion } from "framer-motion";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
 
 export default function Home() {
+  const { session } = useContext(ExpensesContext);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("all");
-
   const handleImportFilteredTransactions = (uploadedTransactions, filter) => {
     setFilteredTransactions(uploadedTransactions);
     setSelectedFilter(filter);

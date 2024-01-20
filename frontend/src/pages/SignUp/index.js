@@ -54,7 +54,6 @@ function SignUp() {
       .catch((error) => {
         console.log(error);
         const message = error.response.data.error.email;
-        console.log(message);
       });
 
     setLoading(false);

@@ -10,10 +10,13 @@ export default function ExpenceCategoryItem(props) {
         id={props.id}
         name="category"
         value={props.id}
-        onChange={() => props.setEnteredCategory(props.id)}
+        onChange={() => props.setCategory(props.id)}
       />
       <label htmlFor={props.id}>
-        <Box className="radio-label" sx={{backgroundColor: props.color, opacity: 0.6}}>
+        <Box
+          className="radio-label"
+          sx={{ backgroundColor: props.color, opacity: 0.6 }}
+        >
           <span className="radio__category-icon">{props.icon}</span>
           <span>{props.title}</span>
         </Box>

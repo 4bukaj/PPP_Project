@@ -1,38 +1,17 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
-import { categoriesList } from "../Expences/ExpencesCategories";
+import { categoriesList } from "../Expences/utils";
 import { hexToRgbA } from "../../pages/Charts";
 import Chart from "chart.js/auto";
 import "./DoughnutChart.css";
 import { numberWithCommas } from "../Crypto/CryptoCarousel";
 import { useState } from "react";
 import { useEffect } from "react";
-//DB
-import { db } from "../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useAuth } from "../../contexts/AuthContext";
 
 export default function DoughnutChart({ data, activeFilter }) {
   const [subtitleFilter, setSubtitleFilter] = useState("");
   const [summaryFilter, setSummaryFilter] = useState("");
-  //FIRESTORE COLLECTION
-  const [transactions, setTransactions] = useState([]);
-  const transactionsCollectionRef = collection(db, "transactions");
-  // const { currentUser } = useAuth();
-  // const filterByUserQuery = query(
-  //   transactionsCollectionRef,
-  //   where("userID", "==", currentUser.uid)
-  // );
   const [refreshKey, setRefreshKey] = useState(0);
-
-  // useEffect(() => {
-  //   const getTransactions = async () => {
-  //     const data = await getDocs(filterByUserQuery);
-  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-
-  //   getTransactions();
-  // }, [refreshKey]);
 
   const updateRefreshKey = () => {
     setRefreshKey(refreshKey + 1);
@@ -42,39 +21,41 @@ export default function DoughnutChart({ data, activeFilter }) {
   const yearToday = Number(today.getFullYear());
   const monthToday = Number(today.getMonth());
 
-  //FILTERING TRANSACTIONS ARRAY
-  const filteredTransactions = transactions.filter(function (e) {
-    switch (activeFilter) {
-      case "all":
-        return 123 === e.userID;
-        break;
-      case "thisMonth":
-        if (new Date().getMonth() === 0) {
-          return (
-            new Date(e.date.seconds * 1000).getMonth() === 11 &&
-            new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
-          );
-        } else {
-          return (
-            new Date(e.date.seconds * 1000).getMonth() === monthToday - 1 &&
-            new Date(e.date.seconds * 1000).getFullYear() === yearToday
-          );
-        }
-        break;
-      case "thisYear":
-        return new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1;
-        break;
-      case "lastMonth":
-        return (
-          new Date(e.date.seconds * 1000).getMonth() === monthToday &&
-          new Date(e.date.seconds * 1000).getFullYear() === yearToday
-        );
-        break;
-      case "lastYear":
-        return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
-        break;
-    }
-  });
+  // //FILTERING TRANSACTIONS ARRAY
+  // const filteredTransactions = transactions.filter(function (e) {
+  //   switch (activeFilter) {
+  //     case "all":
+  //       return 123 === e.userID;
+  //       break;
+  //     case "thisMonth":
+  //       if (new Date().getMonth() === 0) {
+  //         return (
+  //           new Date(e.date.seconds * 1000).getMonth() === 11 &&
+  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
+  //         );
+  //       } else {
+  //         return (
+  //           new Date(e.date.seconds * 1000).getMonth() === monthToday - 1 &&
+  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday
+  //         );
+  //       }
+  //       break;
+  //     case "thisYear":
+  //       return new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1;
+  //       break;
+  //     case "lastMonth":
+  //       return (
+  //         new Date(e.date.seconds * 1000).getMonth() === monthToday &&
+  //         new Date(e.date.seconds * 1000).getFullYear() === yearToday
+  //       );
+  //       break;
+  //     case "lastYear":
+  //       return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
+  //       break;
+  //   }
+  // });
+
+  const filteredTransactions = [];
 
   useEffect(() => {
     const filter = () => {
@@ -131,15 +112,17 @@ export default function DoughnutChart({ data, activeFilter }) {
       {
         data: data.map((data) => data.amount),
         barPercentage: 1,
-        backgroundColor: data.map((data) =>
-          hexToRgbA(categoriesList.find((x) => x.id === data.category).color)
-        ),
-        hoverBackgroundColor: data.map(
-          (data) => categoriesList.find((x) => x.id === data.category).color
-        ),
-        borderColor: data.map(
-          (data) => categoriesList.find((x) => x.id === data.category).color
-        ),
+        // backgroundColor: data.map((data) =>
+        //   hexToRgbA(categoriesList.find((x) => x.id === data.category).color)
+        // ),
+        // hoverBackgroundColor: data.map(
+        //   (data) => categoriesList.find((x) => x.id === data.category).color
+        // ),
+        // borderColor: data.map(
+        //   (data) => categoriesList.find((x) => x.id === data.category).color
+        // ),
+        backgroundColor: "#373737",
+        borderColor: "red",
         spacing: 30,
       },
     ],

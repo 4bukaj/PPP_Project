@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
-import { useAuth } from "../../contexts/AuthContext";
 import CryptoCarousel from "../../components/Crypto/CryptoCarousel";
-import { db } from "../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import HeaderItem from "../../components/Crypto/HeaderItem";
 import CoinsList from "../../components/Crypto/CoinsList";
 import { CoinList } from "../../config/api";
@@ -24,12 +21,6 @@ export default function Crypto() {
   const [allTimePNLnum, setAllTimePNLnum] = useState(0);
   const [dailyPNLnum, setDailyPNLnum] = useState(0);
   const [dailyPNLpercentage, setDailyPNLpercentage] = useState(0);
-  //FIRESTORE COLLECTION
-  const cryptoCollectionRef = collection(db, "crypto");
-  // const filterByUserQuery = query(
-  //   cryptoCollectionRef,
-  //   where("userID", "==", currentUser.uid)
-  // );
 
   //PULING CRYPTO FROM API
   const [allCoins, setAllCoins] = useState([]);

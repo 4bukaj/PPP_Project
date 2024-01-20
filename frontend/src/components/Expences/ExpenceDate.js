@@ -1,26 +1,8 @@
 import React from "react";
+import { format } from "date-fns";
 
 export default function ExpenceDate(props) {
-    
-  const secs = props.date.seconds;
-  const transactionDate = new Date(secs * 1000);
-
-  const month = transactionDate.toLocaleString("en-US", { month: "long" });
-  const day = transactionDate.toLocaleString("en-US", { day: "2-digit" });
-  const year = transactionDate.getFullYear();
-
-  const weekdays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  const weekday = weekdays[transactionDate.getDay()];
-  const date = weekday + ' | ' + day + " " + month + " " + year; 
+  const date = format(new Date(props.date), "EEEE, dd LLL yyyy");
 
   return (
     <div className="expence-date">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import BarChart from "../../components/Charts/BarChart";
-import { categoriesList } from "../../components/Expences/ExpencesCategories";
+import { categoriesList } from "../../components/Expences/utils";
 
 export function hexToRgbA(hex) {
   var c;
