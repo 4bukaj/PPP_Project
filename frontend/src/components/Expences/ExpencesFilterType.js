@@ -1,38 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ExpencesFilter from "./ExpencesFilter";
 import "./ExpenceFilterType.css";
-import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
 
-export default function ExpencesFilterType(props) {
-  const [selectedFilter, setSelectedFilter] = useState("");
-  const [sortByMonth, setSortByMonth] = useState(props.monthToday);
-  const [sortByYear, setSortByYear] = useState(props.yearToday);
-  const [sortByCategory, setSortByCategory] = useState(props.defaultCategory);
-
-  const handleSortByYear = (year) => {
-    setSortByYear(year);
-  };
-
-  const handleSortByCategory = (category) => {
-    setSortByCategory(category);
-  };
-
-  const handleSortByMonth = (month) => {
-    setSortByMonth(month);
-  };
-
-  useEffect(() => {
-    props.sortByYear(sortByYear);
-  }, [sortByYear]);
-
-  useEffect(() => {
-    props.sortByCategory(sortByCategory);
-  }, [sortByCategory]);
-
-  useEffect(() => {
-    props.sortByMonth(sortByMonth);
-  }, [sortByMonth]);
+export default function ExpencesFilterType() {
+  const { setFilterValue } = useContext(ExpensesContext);
 
   return (
     <div className="select-box__container">
@@ -42,19 +15,17 @@ export default function ExpencesFilterType(props) {
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
         <select
-          onChange={(event) => {
-            props.onFilterChange(event.target.value);
-            setSelectedFilter(event.target.value);
-          }}
+          onChange={(e) => setFilterValue(e.target.value)}
+          defaultValue={"all"}
         >
+          <option value="all">All</option>
           <option value="thisMonth">This month</option>
           <option value="lastMonth">Last month</option>
           <option value="thisYear">This year</option>
           <option value="lastYear">Last year</option>
-          <option value="all">All</option>
         </select>
       </motion.div>
-      <ExpencesFilter
+      {/* <ExpencesFilter
         className="secondary-select"
         selectedFilter={selectedFilter}
         sortByMonth={handleSortByMonth}
@@ -63,7 +34,7 @@ export default function ExpencesFilterType(props) {
         selectedYear={sortByYear}
         sortByCategory={handleSortByCategory}
         selectedCategory={sortByCategory}
-      />
+      /> */}
     </div>
   );
 }

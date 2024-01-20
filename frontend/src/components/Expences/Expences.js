@@ -3,7 +3,6 @@ import "./Expences.css";
 import ExpenceItem from "./ExpenceItem";
 import AddNewExpence from "../AddNewExpence/AddNewExpence";
 import ExpencesFilterType from "./ExpencesFilterType";
-import { categoriesList } from "./utils";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
 
@@ -44,118 +43,14 @@ const mouseMove = (e) => {
 };
 
 export default function Expences(props) {
-  const { expenses } = useContext(ExpensesContext);
-  //DATES FOR FILTERING
-  const today = new Date();
-  const yearToday = Number(today.getFullYear());
-  const monthToday = Number(today.getMonth());
-  const defaultCategory = null;
-
-  //NEW EXPENSE POPUP
+  const { filteredExpenses } = useContext(ExpensesContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [transactions, setTransactions] = useState([]);
-
-  //OTHER
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [selectedFilter, setSelectedFilter] = useState("thisMonth");
-  const [sortByMonth, setSortByMonth] = useState(monthToday);
-  const [sortByYear, setSortByYear] = useState(yearToday);
-  const [sortByCategory, setSortByCategory] = useState(defaultCategory);
-
-  //TOTAL SUM var
-  let filteredTotalSum = 0;
-  let thisMonthTotalSum = 0;
-
-  //PULLING TRANSACTIONS FROM FIREBASE
-  // useEffect(() => {
-  //   const getTransactions = async () => {
-  //     const data = await getDocs(filterByUserQuery);
-  //     setTransactions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-
-  //   getTransactions();
-  // }, [refreshKey]);
-
-  const handleFilterChange = (filter) => {
-    setSelectedFilter(filter);
-    // props.onFilterChange(filteredTransactions, filter);
-  };
-
-  const handleSortByYear = (year) => {
-    setSortByYear(Number(year));
-  };
-
-  const handleSortByCategory = (category) => {
-    setSortByCategory(category);
-  };
-
-  const handleSortByMonth = (month) => {
-    setSortByMonth(Number(month));
-  };
-
-  const updateRefreshKey = () => {
-    setRefreshKey(refreshKey + 1);
-  };
-
-  // //FILTERING TRANSACTIONS ARRAY
-  // const filteredTransactions = transactions
-  //   .filter(function (e) {
-  //     switch (selectedFilter) {
-  //       case "all":
-  //         return currentUser.uid === e.userID;
-  //         break;
-  //       case "thisMonth":
-  //         return (
-  //           new Date(e.date.seconds * 1000).getMonth() === monthToday &&
-  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday
-  //         );
-  //         break;
-  //       case "thisYear":
-  //         return new Date(e.date.seconds * 1000).getFullYear() === yearToday;
-  //         break;
-  //       case "lastMonth":
-  //         if (new Date().getMonth() === 0) {
-  //           return (
-  //             new Date(e.date.seconds * 1000).getMonth() === 11 &&
-  //             new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
-  //           );
-  //         } else {
-  //           return (
-  //             new Date(e.date.seconds * 1000).getMonth() === monthToday - 1 &&
-  //             new Date(e.date.seconds * 1000).getFullYear() === yearToday
-  //           );
-  //         }
-  //         break;
-  //       case "lastYear":
-  //         return (
-  //           new Date(e.date.seconds * 1000).getFullYear() === yearToday - 1
-  //         );
-  //         break;
-  //     }
-  //   })
-  //   .sort();
-
-  const filteredTransactions = expenses;
-  //PASSING FILTERRED TRANSACTIONS ARRAY TO PARENT
-  useEffect(() => {
-    const handleFiltering = () =>
-      props.onFilterChange(filteredTransactions, selectedFilter);
-    handleFiltering();
-  }, [selectedFilter, sortByMonth, sortByYear, sortByCategory, refreshKey]);
-
-  //SORTING TRANSACTIONS ARRAY BY DATE - FROM OLDEST TO NEWEST
-  filteredTransactions.sort(function (a, b) {
-    if (a.date > b.date) return -1;
-    if (a.date < b.date) return 1;
-    return 0;
-  });
 
   return (
     <div className="expences-container">
       <AddNewExpence
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        onUpdate={updateRefreshKey}
         addNewExpence
       ></AddNewExpence>
       <div className="expences-container__controls">
@@ -165,15 +60,7 @@ export default function Expences(props) {
           </div>
           <div className="new-expence__title">Add new</div>
         </div>
-        <ExpencesFilterType
-          onFilterChange={handleFilterChange}
-          sortByMonth={handleSortByMonth}
-          monthToday={monthToday}
-          sortByYear={handleSortByYear}
-          yearToday={yearToday}
-          sortByCategory={handleSortByCategory}
-          defaultCategory={defaultCategory}
-        />
+        <ExpencesFilterType />
       </div>
       <div
         className="expences-container__expences"
@@ -183,21 +70,17 @@ export default function Expences(props) {
         onMouseUp={mouseUp}
         onMouseMove={mouseMove}
       >
-        {filteredTransactions.length > 0 ? (
-          filteredTransactions.map((transaction) => {
-            filteredTotalSum += Number(transaction.amount);
-            return (
-              <ExpenceItem
-                key={transaction.id}
-                title={transaction.Title}
-                amount={transaction.Amount}
-                date={transaction.Date}
-                category={transaction.Category}
-                expenceID={transaction.id}
-                onUpdate={updateRefreshKey}
-              />
-            );
-          })
+        {filteredExpenses.length > 0 ? (
+          filteredExpenses.map((transaction) => (
+            <ExpenceItem
+              key={transaction.id}
+              title={transaction.Title}
+              amount={transaction.Amount}
+              date={transaction.Date}
+              category={transaction.Category}
+              expenceID={transaction.id}
+            />
+          ))
         ) : (
           <span className="transactions-error">
             No matching transactions found

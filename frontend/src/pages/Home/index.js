@@ -6,20 +6,18 @@ import { motion } from "framer-motion";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
 
 export default function Home() {
-  const { session } = useContext(ExpensesContext);
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const { session, filteredExpenses } = useContext(ExpensesContext);
   const [selectedFilter, setSelectedFilter] = useState("all");
   const handleImportFilteredTransactions = (uploadedTransactions, filter) => {
-    setFilteredTransactions(uploadedTransactions);
     setSelectedFilter(filter);
   };
 
   return (
     <div className="home-container">
       <div className="home-chart__container">
-        {filteredTransactions.length > 0 ? (
+        {filteredExpenses.length > 0 ? (
           <DoughnutChart
-            data={filteredTransactions}
+            data={filteredExpenses}
             activeFilter={selectedFilter}
           />
         ) : (

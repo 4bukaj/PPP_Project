@@ -7,7 +7,7 @@ import axios from "axios";
 import { ExpensesContext } from "../../contexts/ExpensesContext.js";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
-import { isEmptyObject } from "../../utils.js";
+import { fetchExpenses, isEmptyObject } from "../../utils.js";
 
 //SCROLLING DOWN FUNCTION
 let isDown = false;
@@ -57,22 +57,17 @@ export default function ModalForm(props) {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-
     axios
       .post("http://127.0.0.1:8000/expenses/add/", {
         Title: data.title,
         Amount: data.amount,
-        Date: "2024-01-16",
+        Date: data.date,
         Category: category,
         User: session.id,
       })
-      .then((response) => {
-        axios
-          .get(`http://127.0.0.1:8000/expenses/user/${session.id}`)
-          .then((res) => {
-            setExpenses(res.data);
-          })
-          .catch((e) => console.log(e));
+      .then(async (response) => {
+        const data = await fetchExpenses(session.id);
+        setExpenses(data);
       })
       .catch((e) => console.log(e));
 

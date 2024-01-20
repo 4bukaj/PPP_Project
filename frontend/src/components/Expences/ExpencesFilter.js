@@ -27,17 +27,15 @@ const sortedMonths = [
 
 export default function ExpencesFilter(props) {
   const filterType = props.selectedFilter;
+  console.log(filterType);
 
   switch (filterType) {
     case "all":
-      return <span></span>;
-      break;
+      return null;
     case "thisYear":
-      return <span></span>;
-      break;
+      return null;
     case "thisMonth":
-      return <span></span>;
-      break;
+      return null;
     case "byMonth":
       return (
         <motion.div
@@ -60,7 +58,6 @@ export default function ExpencesFilter(props) {
           </select>
         </motion.div>
       );
-      break;
     case "byYear":
       return (
         <motion.div
@@ -82,7 +79,6 @@ export default function ExpencesFilter(props) {
           </select>
         </motion.div>
       );
-      break;
     case "byCategory":
       return (
         <motion.div
@@ -92,10 +88,9 @@ export default function ExpencesFilter(props) {
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
           <select
-            defaultValue={props.selectedCategory}
             onChange={(event) => props.sortByCategory(event.target.value)}
           >
-            {categoriesList.map((category) => {
+            {Object.values(categoriesList).map((category) => {
               return (
                 <option key={category.title} value={category.id}>
                   {category.title}
@@ -105,6 +100,7 @@ export default function ExpencesFilter(props) {
           </select>
         </motion.div>
       );
-      break;
+    default:
+      return null;
   }
 }

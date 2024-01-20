@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./ExpenceCategory.css";
 import { categoriesList } from "./utils";
 import { Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+import { fetchExpenses } from "../../utils";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
 
 export default function ExpenceCategory(props) {
+  const { session, setExpenses } = useContext(ExpensesContext);
   const [deleteButton, setDeleteButton] = useState(false);
   const [removeConfirm, setRemoveConfirm] = useState(false);
   const [delayHandler, setDelayHandler] = useState(null);
 
   const handleDeleteTransaction = async () => {
-    props.onTransactionRemove();
+    axios
+      .delete(`http://127.0.0.1:8000/expenses/delete/${props.expenceID}/`)
+      .then(async (response) => {
+        const data = await fetchExpenses(session.id);
+        setExpenses(data);
+      })
+      .catch((e) => console.log(e));
   };
 
   const bgColor = () => {

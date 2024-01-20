@@ -6,22 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
 import AddNewCryptoForm from "../Crypto/AddNewCryptoForm";
 
-export default function Modal({
-  open,
-  onClose,
-  onUpdate,
-  addNewExpence,
-  crypto,
-}) {
-  const [refreshKey, setRefreshKey] = useState(0);
-  const handleRefreshKeyUpdate = () => {
-    setRefreshKey(refreshKey + 1);
-  };
-
-  useEffect(() => {
-    onUpdate(refreshKey);
-  }, [refreshKey]);
-
+export default function Modal({ open, onClose, addNewExpence, crypto }) {
   return ReactDom.createPortal(
     <AnimatePresence>
       {open && (
@@ -52,21 +37,14 @@ export default function Modal({
             {addNewExpence && (
               <>
                 <h2>Add new expense</h2>
-                <AddNewExpenceForm
-                  onClose={onClose}
-                  onTransactionAdd={handleRefreshKeyUpdate}
-                />
+                <AddNewExpenceForm onClose={onClose} />
               </>
             )}
             {/* MODAL FOR NEW CRYPTO */}
             {crypto && (
               <>
                 <h2>Add new crypto transaction</h2>
-                <AddNewCryptoForm
-                  onClose={onClose}
-                  crypto={crypto}
-                  onTransactionAdd={handleRefreshKeyUpdate}
-                />
+                <AddNewCryptoForm onClose={onClose} crypto={crypto} />
               </>
             )}
 
