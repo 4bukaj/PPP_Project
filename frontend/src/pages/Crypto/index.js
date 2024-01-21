@@ -3,17 +3,15 @@ import "./styles.css";
 import CryptoCarousel from "../../components/Crypto/CryptoCarousel";
 import HeaderItem from "../../components/Crypto/HeaderItem";
 import CoinsList from "../../components/Crypto/CoinsList";
-import { CoinList } from "../../config/api";
-import axios from "axios";
 import { numberWithCommas } from "../../components/Crypto/CryptoCarousel";
 import AddNewExpence from "../../components/AddNewExpence/AddNewExpence";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import CryptoPortfolio from "../../components/Crypto/CryptoPortfolio";
+import { mockCryptoData } from "../../components/Crypto/mockData";
 
 export default function Crypto() {
   const [isOpen, setIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  // const { currentUser } = useAuth();
   const [crypto, setCrypto] = useState([]);
   const [totalInvestments, setTotalInvestments] = useState();
   const [currentInvestments, setCurrentInvestments] = useState();
@@ -21,9 +19,7 @@ export default function Crypto() {
   const [allTimePNLnum, setAllTimePNLnum] = useState(0);
   const [dailyPNLnum, setDailyPNLnum] = useState(0);
   const [dailyPNLpercentage, setDailyPNLpercentage] = useState(0);
-
-  //PULING CRYPTO FROM API
-  const [allCoins, setAllCoins] = useState([]);
+  const [allCoins, setAllCoins] = useState(mockCryptoData);
 
   // useEffect(() => {
   //   const fetchAllCoins = async () => {
@@ -38,26 +34,6 @@ export default function Crypto() {
   //   };
   //   fetchAllCoins();
   // }, []);
-
-  const fetchAllCoins = async () => {
-    const { data } = await axios.get(CoinList("PLN"));
-
-    setAllCoins(data);
-  };
-
-  useEffect(() => {
-    fetchAllCoins();
-  }, []);
-
-  //PULLING CRYPTO FROM FIREBASE
-
-  // useEffect(() => {
-  //   const getCrypto = async () => {
-  //     const data = await getDocs(filterByUserQuery);
-  //     setCrypto(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-  //   getCrypto();
-  // }, [refreshKey]);
 
   //CALCULATING PORTFOLIO NUMBERS
   useEffect(() => {

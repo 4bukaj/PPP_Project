@@ -1,13 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./styles.css";
 import BarChart from "../../components/Charts/BarChart";
 import { categoriesList } from "../../components/Expences/utils";
-import { hexToRgbA } from "../../utils";
+import { fetchExpenses, hexToRgbA } from "../../utils";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
 import { getMonth, isThisMonth, isThisYear } from "date-fns";
 
 export default function Charts(props) {
-  const { expenses } = useContext(ExpensesContext);
+  const { session } = useContext(ExpensesContext);
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    const fn = async () => {
+      const data = await fetchExpenses(session.id);
+      setExpenses(data);
+    };
+    fn();
+  }, []);
 
   const expensesByCategoriesMonth = [];
   const expensesByCategoriesYear = [];
@@ -38,12 +47,9 @@ export default function Charts(props) {
   const transactionsThisYear = expenses.filter((e) =>
     isThisYear(new Date(e.Date))
   );
-  console.log(transactionsThisYear);
 
   for (const expense of transactionsThisYear) {
     const expenseMonth = getMonth(new Date(expense.Date));
-    console.log(expense);
-
     expensesByMonths[expenseMonth].value += Number(
       transactionsThisYear.find((t) => t.id === expense.id).Amount
     );

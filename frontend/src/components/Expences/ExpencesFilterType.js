@@ -16,7 +16,7 @@ export default function ExpencesFilterType() {
       >
         <select
           onChange={(e) => setFilterValue(e.target.value)}
-          defaultValue={"all"}
+          defaultValue={"thisMonth"}
         >
           <option value="all">All</option>
           <option value="thisMonth">This month</option>

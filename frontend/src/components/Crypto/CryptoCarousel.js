@@ -3,31 +3,30 @@ import axios from "axios";
 import { TrendingCoins } from "../../config/api";
 import { useEffect } from "react";
 import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 import "./CryptoCarousel.css";
+import { mockCryptoData, mockTrendingCryptoData } from "./mockData";
 
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export default function CryptoCarousel() {
-  const [trendingCoins, setTrendingCoins] = useState([]);
+  const [trendingCoins, setTrendingCoins] = useState(mockTrendingCryptoData);
 
-  const fetchTrendingCoins = async () => {
-    const { data } = await axios.get(TrendingCoins("PLN"));
+  // const fetchTrendingCoins = async () => {
+  //   const { data } = await axios.get(TrendingCoins("PLN"));
 
-    setTrendingCoins(data);
-  };
+  //   setTrendingCoins(data);
+  // };
 
-  useEffect(() => {
-    fetchTrendingCoins();
-  }, []);
+  // useEffect(() => {
+  //   fetchTrendingCoins();
+  // }, []);
 
   const items = trendingCoins.map((coin) => {
-    let profit = coin.price_change_percentage_24h;
-    let profitColor = "red";
-    if (profit >= 0) {
-      profitColor = "rgb(14,203,129)";
-    }
+    const profit = coin.price_change_percentage_24h;
+    const profitColor = profit >= 0 ? "rgb(14,203,129)" : "red";
 
     return (
       <div className="crypto-carousel__coin-card">

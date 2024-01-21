@@ -27,7 +27,6 @@ const sortedMonths = [
 
 export default function ExpencesFilter(props) {
   const filterType = props.selectedFilter;
-  console.log(filterType);
 
   switch (filterType) {
     case "all":

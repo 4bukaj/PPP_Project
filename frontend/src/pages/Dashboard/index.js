@@ -13,12 +13,13 @@ import {
   subMonths,
   subYears,
 } from "date-fns";
+import axios from "axios";
 
 export default function Dashboard() {
   const auth = useAuthUser();
   const [session, setSession] = useState(auth);
   const [expenses, setExpenses] = useState([]);
-  const [filterValue, setFilterValue] = useState(null);
+  const [filterValue, setFilterValue] = useState("thisMonth");
 
   useEffect(() => {
     const fn = async () => {

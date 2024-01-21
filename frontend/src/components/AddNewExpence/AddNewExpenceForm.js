@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import "./AddNewExpenceForm.css";
 import { categoriesList } from "../Expences/utils.js";
 import ExpenceCategoryItem from "./ExpenceCategoryItem";
 import axios from "axios";
 import { ExpensesContext } from "../../contexts/ExpensesContext.js";
 import { useForm } from "react-hook-form";
-import { format } from "date-fns";
 import { fetchExpenses, isEmptyObject } from "../../utils.js";
 
 //SCROLLING DOWN FUNCTION
@@ -45,7 +44,6 @@ export default function ModalForm(props) {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.css";
 import { Link, useNavigate } from "react-router-dom";
-//MUI IMPORTS
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -10,9 +9,12 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { isEmptyObject } from "../../utils";
+
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 function SignUp() {
   const {
@@ -23,43 +25,109 @@ function SignUp() {
   } = useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const styles = {
-    input: {
-      input: {
-        color: "#e1e7fd !important",
-      },
-    },
-  };
+  const signIn = useSignIn();
 
   const onSubmit = (data) => {
+    setLoading(true);
+
     if (data.password !== data.confirmpassword) {
       setError("password", { message: "Passwords must be the same" });
       setError("confirmpassword", { message: "Passwords must be the same" });
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-
-    const formData = {
-      email: data.email,
-      password: data.password,
-    };
-
     axios
-      .post("http://127.0.0.1:8000/users/register/", formData)
-      .then((response) => {
-        navigate("/home");
+      .post("http://127.0.0.1:8000/users/register/", {
+        email: data.email,
+        password: data.password,
+      })
+      .then((registerResponse) => {
+        axios
+          .post("http://127.0.0.1:8000/api/token/", {
+            username: data.email,
+            password: data.password,
+          })
+          .then((loginResponse) => {
+            const token = loginResponse.data.access;
+            signIn({
+              auth: {
+                token,
+                type: "Bearer",
+              },
+              userState: {
+                id: registerResponse.data.id,
+                username: data.email,
+                email: data.email,
+              },
+            });
+
+            navigate("/home");
+          });
       })
       .catch((error) => {
         console.log(error);
-        const message = error.response.data.error.email;
       });
 
     setLoading(false);
   };
 
-  console.log(errors);
+  const handleGoogleSignup = (response) => {
+    setLoading(true);
+    const token = response.credential;
+    const userObject = jwtDecode(token);
+
+    axios
+      .post("http://127.0.0.1:8000/users/register/", {
+        email: userObject.email,
+        //KIDS DON'T DO THIS AT HOME XDDD
+        password: userObject.sub,
+      })
+      .then((registerResponse) => {
+        console.log(registerResponse);
+        axios
+          .post("http://127.0.0.1:8000/api/token/", {
+            username: userObject.email,
+            password: userObject.sub,
+          })
+          .then((loginResponse) => {
+            const token = loginResponse.data.access;
+
+            signIn({
+              auth: {
+                token,
+                type: "Bearer",
+              },
+              userState: {
+                id: registerResponse.data.id,
+                username: userObject.email,
+                email: userObject.email,
+              },
+            });
+
+            navigate("/home");
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        "972496767034-fsd19qka5a961fmvr4vrr7si41nkaofs.apps.googleusercontent.com",
+      callback: handleGoogleSignup,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+  }, []);
 
   return (
     <Grid
@@ -90,6 +158,7 @@ function SignUp() {
               >
                 Sign Up
               </Typography>
+              <div id="signInDiv"></div>
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
@@ -139,7 +208,7 @@ function SignUp() {
                     />
                   </Grid>
                   <Button
-                    endIcon={<HowToRegIcon />}
+                    endIcon={!loading && <HowToRegIcon />}
                     type="submit"
                     sx={{
                       marginTop: 3,

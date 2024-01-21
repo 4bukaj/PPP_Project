@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -13,12 +13,12 @@ import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { isEmptyObject } from "../../utils";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignIn() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -64,6 +64,57 @@ export default function SignIn() {
     setLoading(false);
   };
 
+  const handleGoogleSignin = (response) => {
+    setLoading(true);
+    const token = response.credential;
+    const userObject = jwtDecode(token);
+
+    const formData = {
+      username: userObject.email,
+      //KIDS DON'T DO THIS AT HOME XDDD
+      password: userObject.sub,
+    };
+
+    axios
+      .all([
+        axios.post("http://127.0.0.1:8000/users/get/", formData),
+        axios.post("http://127.0.0.1:8000/api/token/", formData),
+      ])
+      .then(
+        axios.spread((userData, session) => {
+          signIn({
+            auth: {
+              token: session.data.access,
+              type: "Bearer",
+            },
+            userState: {
+              id: userData.data.id,
+              username: userData.data.username,
+              email: userData.data.email,
+            },
+          });
+
+          navigate("/home");
+        })
+      );
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        "972496767034-fsd19qka5a961fmvr4vrr7si41nkaofs.apps.googleusercontent.com",
+      callback: handleGoogleSignin,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+  }, []);
+
   return (
     <Grid
       container
@@ -93,6 +144,7 @@ export default function SignIn() {
               >
                 Log In
               </Typography>
+              <div id="signInDiv"></div>
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
