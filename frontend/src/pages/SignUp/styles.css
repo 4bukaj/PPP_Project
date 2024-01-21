@@ -6,11 +6,12 @@
   background-color: var(--dark);
   height: 100vh;
   color: #f5f7fa;
+  width: 55%;
+  margin: auto;
 }
 
 .auth-form__container {
-  width: 60%;
-  padding: 5%;
+  width: 100%;
 }
 
 .auth-form__container input {
@@ -58,4 +59,20 @@
 
 .card-container {
   background-color: var(--dark);
+}
+
+#google-popup-container {
+  height: 400px;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+
+.google-popup-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.75);
 }

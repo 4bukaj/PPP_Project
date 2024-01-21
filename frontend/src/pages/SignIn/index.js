@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 //MUI IMPORTS
+import GoogleIcon from "@mui/icons-material/Google";
+import CircularProgress from "@mui/material/CircularProgress";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -29,6 +31,8 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const signIn = useSignIn();
+  const [googleBtnLoading, setGoogleBtnLoading] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -96,7 +100,41 @@ export default function SignIn() {
 
           navigate("/home");
         })
-      );
+      )
+      .catch((e) => {
+        console.log(22);
+        axios
+          .post("http://127.0.0.1:8000/users/register/", {
+            email: userObject.email,
+            //KIDS DON'T DO THIS AT HOME XDDD
+            password: userObject.sub,
+          })
+          .then((registerResponse) => {
+            console.log(registerResponse);
+            axios
+              .post("http://127.0.0.1:8000/api/token/", {
+                username: userObject.email,
+                password: userObject.sub,
+              })
+              .then((loginResponse) => {
+                const token = loginResponse.data.access;
+
+                signIn({
+                  auth: {
+                    token,
+                    type: "Bearer",
+                  },
+                  userState: {
+                    id: registerResponse.data.id,
+                    username: userObject.email,
+                    email: userObject.email,
+                  },
+                });
+
+                navigate("/home");
+              });
+          });
+      });
 
     setLoading(false);
   };
@@ -107,13 +145,23 @@ export default function SignIn() {
       client_id:
         "972496767034-fsd19qka5a961fmvr4vrr7si41nkaofs.apps.googleusercontent.com",
       callback: handleGoogleSignin,
-    });
-
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-      theme: "outline",
-      size: "large",
+      prompt_parent_id: "google-popup-container",
     });
   }, []);
+
+  const handleGoogleAuthClick = () => {
+    setGoogleBtnLoading(true);
+    setTimeout(() => {
+      setShowOverlay(true);
+    }, 400);
+
+    google.accounts.id.prompt();
+  };
+
+  const handleHideOverlay = () => {
+    setGoogleBtnLoading(false);
+    setShowOverlay(false);
+  };
 
   return (
     <Grid
@@ -134,17 +182,50 @@ export default function SignIn() {
             transition={{ duration: 0.3, ease: "linear" }}
           >
             <Box className="auth-form__card">
-              <Avatar sx={{ m: 1, bgcolor: "light.main", color: "dark.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{ color: "light.main" }}
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                Log In
-              </Typography>
-              <div id="signInDiv"></div>
+                <Avatar
+                  sx={{ m: 1, bgcolor: "light.main", color: "dark.main" }}
+                >
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography
+                  component="h1"
+                  variant="h4"
+                  sx={{ color: "light.main" }}
+                >
+                  LOG IN
+                </Typography>
+              </div>
+              <Button
+                fullWidth
+                startIcon={
+                  googleBtnLoading ? (
+                    <CircularProgress color={"secondary"} size={20} />
+                  ) : (
+                    <GoogleIcon color={"secondary"} />
+                  )
+                }
+                type="submit"
+                sx={{
+                  marginTop: 6,
+                  marginBottom: 3,
+                  color: "light.main",
+                  padding: "20px",
+
+                  "&.MuiButtonBase-root.Mui-disabled": {
+                    color: "disabled.main",
+                    borderColor: "disabled.main",
+                  },
+                }}
+                variant="outlined"
+                color="secondary"
+                onClick={handleGoogleAuthClick}
+                disabled={googleBtnLoading}
+              >
+                CONTINUE WITH GOOGLE
+              </Button>
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
@@ -185,7 +266,7 @@ export default function SignIn() {
                       marginTop: 3,
                       marginBottom: 3,
                       color: "light.main",
-                      padding: "10px",
+                      padding: "20px",
                     }}
                     variant="contained"
                     color="secondary"
@@ -208,6 +289,10 @@ export default function SignIn() {
           </motion.div>
         </div>
       </Grid>
+      {showOverlay && (
+        <div className="google-popup-overlay" onClick={handleHideOverlay}></div>
+      )}
+      <div id="google-popup-container"></div>
       <Grid
         item
         md={7}

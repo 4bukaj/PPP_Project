@@ -30,6 +30,9 @@ const theme = createTheme({
     light: {
       main: "#E1E7FD",
     },
+    disabled: {
+      main: "#999",
+    },
   },
 });
 

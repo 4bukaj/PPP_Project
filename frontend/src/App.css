@@ -35,11 +35,11 @@
   cursor: default;
 }
 
-button:disabled {
+/* button:disabled {
   background-color: #c9caca !important;
   color: gray !important;
   opacity: 0.4;
-}
+} */
 
 select {
   background-color: var(--dark);

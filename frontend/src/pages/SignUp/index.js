@@ -11,6 +11,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { isEmptyObject } from "../../utils";
+import GoogleIcon from "@mui/icons-material/Google";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -26,6 +28,8 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const signIn = useSignIn();
+  const [googleBtnLoading, setGoogleBtnLoading] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -77,6 +81,12 @@ function SignUp() {
     const token = response.credential;
     const userObject = jwtDecode(token);
 
+    const formData = {
+      username: userObject.email,
+      //KIDS DON'T DO THIS AT HOME XDDD
+      password: userObject.sub,
+    };
+
     axios
       .post("http://127.0.0.1:8000/users/register/", {
         email: userObject.email,
@@ -109,7 +119,32 @@ function SignUp() {
           });
       })
       .catch((error) => {
-        console.log(error);
+        const { username, email } = error.response.data.error;
+
+        if (username && email) {
+          axios
+            .all([
+              axios.post("http://127.0.0.1:8000/users/get/", formData),
+              axios.post("http://127.0.0.1:8000/api/token/", formData),
+            ])
+            .then(
+              axios.spread((userData, session) => {
+                signIn({
+                  auth: {
+                    token: session.data.access,
+                    type: "Bearer",
+                  },
+                  userState: {
+                    id: userData.data.id,
+                    username: userData.data.username,
+                    email: userData.data.email,
+                  },
+                });
+
+                navigate("/home");
+              })
+            );
+        }
       });
 
     setLoading(false);
@@ -121,13 +156,23 @@ function SignUp() {
       client_id:
         "972496767034-fsd19qka5a961fmvr4vrr7si41nkaofs.apps.googleusercontent.com",
       callback: handleGoogleSignup,
-    });
-
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-      theme: "outline",
-      size: "large",
+      prompt_parent_id: "google-popup-container",
     });
   }, []);
+
+  const handleGoogleAuthClick = () => {
+    setGoogleBtnLoading(true);
+    setTimeout(() => {
+      setShowOverlay(true);
+    }, 400);
+
+    google.accounts.id.prompt();
+  };
+
+  const handleHideOverlay = () => {
+    setGoogleBtnLoading(false);
+    setShowOverlay(false);
+  };
 
   return (
     <Grid
@@ -158,7 +203,34 @@ function SignUp() {
               >
                 Sign Up
               </Typography>
-              <div id="signInDiv"></div>
+              <Button
+                fullWidth
+                startIcon={
+                  googleBtnLoading ? (
+                    <CircularProgress color={"secondary"} size={20} />
+                  ) : (
+                    <GoogleIcon color={"secondary"} />
+                  )
+                }
+                type="submit"
+                sx={{
+                  marginTop: 6,
+                  marginBottom: 3,
+                  color: "light.main",
+                  padding: "20px",
+
+                  "&.MuiButtonBase-root.Mui-disabled": {
+                    color: "disabled.main",
+                    borderColor: "disabled.main",
+                  },
+                }}
+                variant="outlined"
+                color="secondary"
+                onClick={handleGoogleAuthClick}
+                disabled={googleBtnLoading}
+              >
+                CONTINUE WITH GOOGLE
+              </Button>
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
@@ -232,6 +304,10 @@ function SignUp() {
           </motion.div>
         </div>
       </Grid>
+      {showOverlay && (
+        <div className="google-popup-overlay" onClick={handleHideOverlay}></div>
+      )}
+      <div id="google-popup-container"></div>
       <Grid
         item
         md={7}
