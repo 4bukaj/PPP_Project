@@ -4,6 +4,7 @@ from rest_framework import generics, status, authentication, permissions # type:
 from rest_framework.views import APIView # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth import authenticate # type: ignore
+from django.shortcuts import get_object_or_404
 from .models import Expenses, Kryptos
 from .serializers import UserSerializer, UserCheckSerializer, UserUpdateSerializer, ExpensesSerializer, KryptosSerializer
 
@@ -108,26 +109,16 @@ class ExpensesList(generics.ListAPIView):
     queryset = Expenses.objects.all()
     serializer_class = ExpensesSerializer
 
-class ExpensesListDeleteAll(generics.ListCreateAPIView):
-    queryset = Expenses.objects.all()
+class ExpensesListDelete(generics.DestroyAPIView):
     serializer_class = ExpensesSerializer
-    
-    def delete(self, request, user_id, expense_id, *args, **kwargs):
-        try:
-            user_exists = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+    def delete(self, request, expense_id, *args, **kwargs):
         try:
-            expense = Expenses.objects.get(id=expense_id, User__id=user_id)
-            serializer = self.get_serializer(expense)
+            expense = get_object_or_404(Expenses, id=expense_id)
             expense.delete()
-            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
-        except Expenses.DoesNotExist:
-            return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success': 'Expense deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ExpensesListGetExpenses(generics.ListCreateAPIView):
     queryset = Expenses.objects.all()
