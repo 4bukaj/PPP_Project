@@ -55,3 +55,14 @@
 .new-expence__title {
   font-size: 12px;
 }
+
+.transactions-error {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.transactions-error p {
+  margin-top: 20px;
+  font-size: 20px;
+  color: var(--primary);
+}

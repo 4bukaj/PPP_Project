@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
 import "./styles.css";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { useEffect, useMemo, useState } from "react";
 import { fetchExpenses } from "../../utils";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {
   isSameMonth,
   isSameYear,
@@ -13,13 +13,14 @@ import {
   subMonths,
   subYears,
 } from "date-fns";
-import axios from "axios";
 
 export default function Dashboard() {
   const auth = useAuthUser();
   const [session, setSession] = useState(auth);
   const [expenses, setExpenses] = useState([]);
   const [filterValue, setFilterValue] = useState("thisMonth");
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("all");
 
   useEffect(() => {
     const fn = async () => {
@@ -46,31 +47,50 @@ export default function Dashboard() {
     }
   };
 
+  function customSort(a, b) {
+    const dateA = new Date(a.Date);
+    const dateB = new Date(b.Date);
+    const createdAtA = new Date(a.CreatedAt);
+    const createdAtB = new Date(b.CreatedAt);
+
+    // Compare by Date in descending order
+    if (dateA > dateB) return -1;
+    if (dateA < dateB) return 1;
+
+    // If Date is the same, compare by CreatedAt in descending order
+    if (createdAtA > createdAtB) return -1;
+    if (createdAtA < createdAtB) return 1;
+
+    return 0;
+  }
+
   const filteredExpenses = useMemo(() => {
     return expenses
       .filter((expense) => returnFilter(expense.Date))
-      .sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime());
+      .sort(customSort);
   }, [expenses, filterValue]);
 
   return (
-    <div className="dashboard-container">
-      <Sidebar />
-      <div className="dashboard-content">
-        <ExpensesContext.Provider
-          value={{
-            session,
-            setSession,
-            expenses,
-            setExpenses,
-            filteredExpenses,
-            filterValue,
-            setFilterValue,
-            returnFilter,
-          }}
-        >
+    <ExpensesContext.Provider
+      value={{
+        session,
+        setSession,
+        expenses,
+        setExpenses,
+        filteredExpenses,
+        filterValue,
+        setFilterValue,
+        returnFilter,
+        popupOpen,
+        setPopupOpen,
+      }}
+    >
+      <div className="dashboard-container">
+        <Sidebar />
+        <div className="dashboard-content">
           <Outlet />
-        </ExpensesContext.Provider>
+        </div>
       </div>
-    </div>
+    </ExpensesContext.Provider>
   );
 }

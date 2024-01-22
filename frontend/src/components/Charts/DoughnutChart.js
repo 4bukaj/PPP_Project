@@ -104,9 +104,7 @@ export default function DoughnutChart({ data, activeFilter }) {
         <span className="total-sum__subtitle">
           Total spendings {renderSubtitleFilter}
         </span>
-        {renderSubtitleFilter() === "all" ? (
-          ""
-        ) : (
+        {renderSubtitleFilter() !== "all" && compSum > 0 && (
           <span className="total-sum__summary">
             You spent{" "}
             <span className={activeSum > compSum ? "flag-red" : "flag-green"}>

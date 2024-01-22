@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./styles.css";
 import CryptoCarousel from "../../components/Crypto/CryptoCarousel";
 import HeaderItem from "../../components/Crypto/HeaderItem";
@@ -8,8 +8,12 @@ import AddNewExpence from "../../components/AddNewExpence/AddNewExpence";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import CryptoPortfolio from "../../components/Crypto/CryptoPortfolio";
 import { mockCryptoData } from "../../components/Crypto/mockData";
+import { Button } from "@mui/material";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
+import axios from "axios";
 
 export default function Crypto() {
+  const { session } = useContext(ExpensesContext);
   const [isOpen, setIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [crypto, setCrypto] = useState([]);
@@ -35,16 +39,28 @@ export default function Crypto() {
   //   fetchAllCoins();
   // }, []);
 
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/kryptos/get/${session.id}/`)
+      .then((res) => {
+        const data = res.data.map((item) => ({
+          coin: item.Coin,
+          amount: item.Amount,
+          value: item.Worth,
+          image: item.ImageUrl,
+          createdAt: item.CreatedAt,
+        }));
+        setCrypto(data);
+      })
+      .catch((e) => console.log(e));
+  }, []);
+
   //CALCULATING PORTFOLIO NUMBERS
   useEffect(() => {
     const calculateTotalInvestments = () => {
-      let sumInv = 0;
       let sumCurr = 0;
       let sumYesterday = 0;
-      //SUM OF VALUES OF EACH TRANSACTION
-      for (const item in crypto) {
-        sumInv += Number(crypto[item].value);
-      }
+      const sumInv = crypto.reduce((acc, item) => acc + Number(item.value), 0);
 
       //SUM OF CURRENT VALUE OF ALL ASSETS
       if (allCoins.length > 0) {
@@ -82,6 +98,7 @@ export default function Crypto() {
         onClose={() => setIsOpen(false)}
         onUpdate={() => setRefreshKey(refreshKey + 1)}
         crypto={allCoins}
+        setCrypto={setCrypto}
       />
       <div className="crypto-header">
         <div className="crypto-header__container">
@@ -116,23 +133,36 @@ export default function Crypto() {
       <div className="crypto-bottom-row">
         <div className="crypto-list">
           <div className="coins-list-header">
-            <h3 className="crypto-h3">List of transactions</h3>
-            <div
-              className="new-expence__container"
-              onClick={() => setIsOpen(true)}
-              style={{ width: 25 + "%" }}
-            >
-              <AddBoxIcon />
+            {crypto.length ? (
+              <Button
+                startIcon={<AddBoxIcon />}
+                variant="outlined"
+                color="primary"
+                onClick={() => setIsOpen(true)}
+                sx={{ height: "50px", mb: 2 }}
+              >
+                Add new transaction
+              </Button>
+            ) : null}
+          </div>
+          <CoinsList
+            cryptoList={allCoins}
+            portfolioList={crypto}
+            open={setIsOpen}
+          />
+        </div>
+        {crypto.length ? (
+          <div className="crypto-summary">
+            <div className="coins-list-header righty">
+              <h3 className="crypto-h3">YOUR PORTFOLIO</h3>
             </div>
+            <CryptoPortfolio crypto={crypto} allCoins={allCoins} />
           </div>
-          <CoinsList cryptoList={allCoins} portfolioList={crypto} />
-        </div>
-        <div className="crypto-summary">
-          <div className="coins-list-header righty">
-            <h3 className="crypto-h3">Your portfolio</h3>
-          </div>
-          <CryptoPortfolio crypto={crypto} allCoins={allCoins} />
-        </div>
+        ) : (
+          <p style={{ marginTop: "15px", color: "var(--primary)" }}>
+            Add first crypto transaction to view your <b>portfolio</b>.
+          </p>
+        )}
       </div>
     </div>
   );

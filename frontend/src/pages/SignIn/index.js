@@ -102,7 +102,6 @@ export default function SignIn() {
         })
       )
       .catch((e) => {
-        console.log(22);
         axios
           .post("http://127.0.0.1:8000/users/register/", {
             email: userObject.email,
@@ -110,7 +109,6 @@ export default function SignIn() {
             password: userObject.sub,
           })
           .then((registerResponse) => {
-            console.log(registerResponse);
             axios
               .post("http://127.0.0.1:8000/api/token/", {
                 username: userObject.email,

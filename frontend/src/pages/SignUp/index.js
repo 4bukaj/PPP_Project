@@ -94,7 +94,6 @@ function SignUp() {
         password: userObject.sub,
       })
       .then((registerResponse) => {
-        console.log(registerResponse);
         axios
           .post("http://127.0.0.1:8000/api/token/", {
             username: userObject.email,

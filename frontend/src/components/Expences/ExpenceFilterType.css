@@ -1,4 +1,42 @@
-.select-box__container > div > select {
-    height: 62px;
-    text-align: left;
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.selected-option {
+  padding: 10px;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid var(--primary);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background-color: #fff;
+  z-index: 1;
+  display: none;
+}
+
+.options-list li {
+  padding: 10px;
+  cursor: pointer;
+  color: var(--primary);
+}
+
+.options-list li:hover {
+  background-color: var(--light);
+}
+
+.options-list input {
+  margin-right: 5px;
+}
+
+.options-list.visible {
+  display: block;
 }

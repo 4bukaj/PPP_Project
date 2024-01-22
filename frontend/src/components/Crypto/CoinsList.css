@@ -1,5 +1,7 @@
 .crypto-h3 {
   font-weight: 700;
+  color: var(--primary);
+  font-size: 32px;
 }
 
 .coins-list,

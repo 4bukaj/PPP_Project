@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import "./AddNewExpence.css";
 import ReactDom from "react-dom";
 import AddNewExpenceForm from "./AddNewExpenceForm";
@@ -6,7 +5,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
 import AddNewCryptoForm from "../Crypto/AddNewCryptoForm";
 
-export default function Modal({ open, onClose, addNewExpence, crypto }) {
+export default function Modal({
+  open,
+  onClose,
+  addNewExpence,
+  crypto,
+  setCrypto,
+}) {
   return ReactDom.createPortal(
     <AnimatePresence>
       {open && (
@@ -44,7 +49,11 @@ export default function Modal({ open, onClose, addNewExpence, crypto }) {
             {crypto && (
               <>
                 <h2>Add new crypto transaction</h2>
-                <AddNewCryptoForm onClose={onClose} crypto={crypto} />
+                <AddNewCryptoForm
+                  onClose={onClose}
+                  crypto={crypto}
+                  setCrypto={setCrypto}
+                />
               </>
             )}
 

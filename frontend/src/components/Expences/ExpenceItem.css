@@ -7,7 +7,6 @@
   border-radius: 4px;
   padding: 10px 40px;
   color: var(--dark);
-  font-weight: bolder;
   transition: all 0.2s ease-in-out;
   background-color: rgb(247, 247, 247);
   cursor: pointer;
@@ -38,11 +37,11 @@
 
 .expence-item__title {
   font-size: 15px;
+  font-weight: 700;
 }
 
 .expence-item__amount {
   font-size: 20px;
-  font-weight: bold;
   display: flex;
   align-items: center;
   text-align: right;

@@ -14,16 +14,18 @@ export default function HeaderItem(props) {
       <div className="header-item-top">
         {props.pnl ? (
           <>
-            <span>{props.number + "zł"} </span>
+            <span>{`${props.number} zł`}</span>
             <span>
-              <span className="colored" style={style}>
-                {props.percentage > 0 ? (
-                  <ArrowDropUpIcon />
-                ) : (
-                  <ArrowDropDownIcon />
-                )}
-                {props.percentage + "%"}
-              </span>
+              {!isNaN(props.percentage) && (
+                <span className="colored" style={style}>
+                  {props.percentage > 0 ? (
+                    <ArrowDropUpIcon />
+                  ) : (
+                    <ArrowDropDownIcon />
+                  )}
+                  {props.percentage + "%"}
+                </span>
+              )}
             </span>
           </>
         ) : (

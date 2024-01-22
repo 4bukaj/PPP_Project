@@ -5,6 +5,7 @@ import AddNewExpence from "../AddNewExpence/AddNewExpence";
 import ExpencesFilterType from "./ExpencesFilterType";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
+import { Button } from "@mui/material";
 
 //SCROLLING DOWN FUNCTION
 let isDown = false;
@@ -43,23 +44,36 @@ const mouseMove = (e) => {
 };
 
 export default function Expences(props) {
-  const { filteredExpenses } = useContext(ExpensesContext);
-  const [isOpen, setIsOpen] = useState(false);
+  const { filteredExpenses, setPopupOpen, filterValue } =
+    useContext(ExpensesContext);
+
+  const renderFilterLabel = () => {
+    switch (filterValue) {
+      case "thisMonth":
+        return "this month";
+      case "lastMonth":
+        return "last month";
+      case "thisYear":
+        return "this year";
+      case "lastYear":
+        return "last year";
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="expences-container">
-      <AddNewExpence
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        addNewExpence
-      ></AddNewExpence>
       <div className="expences-container__controls">
-        <div className="new-expence__container" onClick={() => setIsOpen(true)}>
-          <div className="new-expence__icon">
-            <AddBoxIcon />
-          </div>
-          <div className="new-expence__title">Add new</div>
-        </div>
+        <Button
+          startIcon={<AddBoxIcon />}
+          variant="contained"
+          color="secondary"
+          onClick={() => setPopupOpen(true)}
+          sx={{ height: "50px" }}
+        >
+          Add new expense
+        </Button>
         <ExpencesFilterType />
       </div>
       <div
@@ -82,9 +96,13 @@ export default function Expences(props) {
             />
           ))
         ) : (
-          <span className="transactions-error">
-            No matching transactions found
-          </span>
+          <div className="transactions-error">
+            <p>{`Ooopss, no expenses found in ${renderFilterLabel()}.`}</p>
+            <p>
+              {" "}
+              Try changing your <b>filters</b>.
+            </p>
+          </div>
         )}
       </div>
     </div>

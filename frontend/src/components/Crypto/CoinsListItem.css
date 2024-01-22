@@ -5,6 +5,7 @@
   margin: 5px 0;
   padding: 5px;
   border-radius: 4px;
+  height: 60px;
 }
 
 .coins-list-item:nth-child(even) {
@@ -24,6 +25,12 @@
   align-items: center;
   justify-content: left;
   width: 19%;
+}
+
+.coin-holder {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .coin-holder > img {

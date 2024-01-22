@@ -1,18 +1,10 @@
 import React from "react";
-import { useEffect } from "react";
 import "./CoinsList.css";
 import CoinsListItem from "./CoinsListItem";
+import { Button } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
-export default function CoinsList({ portfolioList, cryptoList }) {
-  portfolioList.forEach((coin) => {
-    cryptoList.forEach((item) => {
-      if (item.symbol.toUpperCase() === coin.coin) coin.image = item.image;
-    });
-  });
-
-  portfolioList.sort(function (a, b) {
-    return b.date.seconds - a.date.seconds;
-  });
+export default function CoinsList({ portfolioList, cryptoList, open }) {
   return (
     <div>
       <div className="coins-list">
@@ -20,23 +12,37 @@ export default function CoinsList({ portfolioList, cryptoList }) {
           <div>Crypto</div>
           <div>Amount</div>
           <div>Value</div>
-          <div>Date</div>
+          <div>Time</div>
         </div>
         {portfolioList.length > 0 ? (
-          portfolioList.map((coin) => {
-            return (
-              <CoinsListItem
-                key={coin.coin + coin.amount}
-                coin={coin.coin}
-                amount={coin.amount}
-                value={coin.value}
-                image={coin.image}
-                date={coin.date}
-              />
-            );
-          })
+          portfolioList
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+            .map((coin) => {
+              return (
+                <CoinsListItem
+                  key={coin.coin + coin.amount}
+                  coin={coin.coin}
+                  amount={coin.amount}
+                  value={coin.value}
+                  image={coin.image}
+                  createdAt={coin.createdAt}
+                />
+              );
+            })
         ) : (
-          <span className="transactions-error">No transactions found!</span>
+          <Button
+            startIcon={<AddBoxIcon />}
+            variant="outlined"
+            color="primary"
+            onClick={() => open(true)}
+            sx={{ height: "50px", mt: 3 }}
+          >
+            Add first transaction
+          </Button>
         )}
       </div>
     </div>

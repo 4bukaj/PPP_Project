@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import "./CryptoPortfolio.css";
 import CryptoPortfolioItem from "./CryptoPortfolioItem";
 
@@ -31,10 +30,6 @@ export default function CryptoPortfolio({ crypto, allCoins }) {
     item.pnl = ((curVal - item.value) / item.value) * 100;
   });
 
-  portfolio.sort(function (a, b) {
-    return b.value - a.value;
-  });
-
   return (
     <div className="coins-portfolio">
       <div className="coins-portfolio-header">
@@ -44,18 +39,20 @@ export default function CryptoPortfolio({ crypto, allCoins }) {
         <div>PNL</div>
       </div>
       {portfolio.length > 0 ? (
-        portfolio.map((coin) => {
-          return (
-            <CryptoPortfolioItem
-              key={coin.coin}
-              coin={coin.coin}
-              value={coin.value}
-              image={coin.image}
-              avgRate={coin.avgRate}
-              pnl={coin.pnl}
-            />
-          );
-        })
+        portfolio
+          .sort((a, b) => b.value - a.value)
+          .map((coin) => {
+            return (
+              <CryptoPortfolioItem
+                key={coin.coin}
+                coin={coin.coin}
+                value={coin.value}
+                image={coin.image}
+                avgRate={coin.avgRate}
+                pnl={coin.pnl}
+              />
+            );
+          })
       ) : (
         <span className="transactions-error">No transactions found!</span>
       )}

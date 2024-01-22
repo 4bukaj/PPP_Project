@@ -38,7 +38,7 @@ export default function CryptoCarousel() {
           </span>
         </span>
         <span className="coin-card-price">
-          PLN {numberWithCommas(coin?.current_price.toFixed(2))}
+          PLN <b>{numberWithCommas(coin?.current_price.toFixed(2))}</b>
         </span>
       </div>
     );

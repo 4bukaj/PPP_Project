@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Grid, TextField } from "@mui/material";
+import { Button, Grid, InputAdornment, TextField } from "@mui/material";
 import "./AddNewExpenceForm.css";
 import { categoriesList } from "../Expences/utils.js";
 import ExpenceCategoryItem from "./ExpenceCategoryItem";
@@ -107,12 +107,20 @@ export default function ModalForm(props) {
               fullWidth
               label="Amount"
               variant="outlined"
-              type={"number"}
               {...register("amount", {
                 required: "Amount is required",
+                pattern: {
+                  value: /^[+-]?\d+(\.\d+)?$/,
+                  message: "Please enter a valid number",
+                },
               })}
               error={!!errors?.amount}
               helperText={errors?.amount?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">zł</InputAdornment>
+                ),
+              }}
               InputLabelProps={{ className: "textfield__label-modal" }}
             />
           </Grid>
@@ -129,7 +137,6 @@ export default function ModalForm(props) {
               helperText={errors?.date?.message}
               InputLabelProps={{
                 className: "textfield__label-modal",
-                shrink: true,
               }}
             />
           </Grid>
@@ -146,14 +153,14 @@ export default function ModalForm(props) {
         {renderCategories}
       </div>
       <div className="modal-form__buttons">
-        <button
+        <Button
           type="submit"
-          className="dark-btn"
-          onClick={() => props.onTransactionAdd()}
+          variant="contained"
+          sx={{ height: "50px" }}
           disabled={isLoading || !isEmptyObject(errors)}
         >
           Add expense
-        </button>
+        </Button>
       </div>
     </form>
   );

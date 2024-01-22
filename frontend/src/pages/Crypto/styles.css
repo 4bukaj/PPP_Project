@@ -39,6 +39,10 @@
   width: 48%;
 }
 
+.coins-list-header.righty {
+  margin-top: 18px;
+}
+
 @media screen and (max-width: 1199px) {
   .crypto-bottom-row {
     flex-direction: column-reverse;
