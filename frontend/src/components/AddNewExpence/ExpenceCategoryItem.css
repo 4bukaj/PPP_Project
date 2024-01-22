@@ -1,0 +1,41 @@
+input[type="radio"] {
+  -webkit-appearance: none;
+}
+
+.radio-label {
+  height: 120px;
+  width: 120px;
+  border-radius: 4px;
+  margin-right: 25px;
+  padding: 20px;
+  transition: 0.5s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+}
+
+.radio-label > span {
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+.radio__category-icon {
+  transform: scale(2);
+}
+
+input[type="radio"]:hover ~ label > .radio-label {
+  opacity: 1;
+  -webkit-box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+  box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+}
+
+input[type="radio"]:checked ~ label > .radio-label {
+  color: #ffffff;
+  opacity: 1;
+  -webkit-box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+  box-shadow: 5px 7px 19px -9px rgba(66, 68, 90, 1);
+}

@@ -1,0 +1,51 @@
+.doughnutChart__container {
+  width: 85% !important;
+  min-height: 85vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* @media screen and (max-width: 1199px) {
+  .doughnutChart__container {
+    min-height: 400px;
+  }
+} */
+
+.total-sum__container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.total-sum__title {
+  font-size: 3rem;
+  color: var(--dark);
+}
+
+.total-sum__subtitle {
+  font-size: 1rem;
+  color: gray;
+  margin-top: -10px;
+}
+
+.total-sum__summary {
+  color: var(--primary);
+  margin-top: 10px;
+  text-align: center;
+}
+
+.flag-green {
+  color: rgb(14, 203, 129);
+}
+
+.flag-red {
+  color: red;
+}

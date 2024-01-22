@@ -1,0 +1,22 @@
+.crypto-carousel__coin-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.crypto-carousel__coin-card > img {
+  width: 100px;
+  height: 100px;
+}
+
+.coin-card-title {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.coin-card-price {
+  margin-top: 5px;
+  font-size: 22px;
+  color: var(--primary);
+}

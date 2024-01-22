@@ -1,6 +1,6 @@
 from rest_framework.response import Response # type: ignore
 from rest_framework.decorators import api_view # type: ignore
-from rest_framework import generics, status # type: ignore
+from rest_framework import generics, status, authentication, permissions # type: ignore
 from rest_framework.views import APIView # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth import authenticate # type: ignore
@@ -18,6 +18,7 @@ def users_get_all(request):
 
 @api_view(['POST'])
 def users_get(request):
+
     serializer = UserCheckSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -41,9 +42,9 @@ def users_get(request):
 
 @api_view(['POST'])
 def users_register(request):
-    username = request.data.get('username', '')
-    password = request.data.get('password', '')
     email = request.data.get('email', '')
+    username = request.data.get('email', '')
+    password = request.data.get('password', '')
 
     existing_user_username = User.objects.filter(username=username).first()
     existing_user_email = User.objects.filter(email=email).first()
@@ -91,10 +92,15 @@ class UpdateUser(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ListUsers(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 # --------------------------------------------------------------------------
 
 # ------------------------------- Expences ---------------------------------

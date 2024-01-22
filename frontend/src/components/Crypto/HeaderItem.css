@@ -1,0 +1,30 @@
+.header-item-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-item-top {
+  font-size: 26px;
+  color: var(--dark);
+  display: flex;
+}
+
+.header-item-top > span {
+  display: flex;
+  align-items: flex-end;
+  padding: 5px 5px;
+}
+
+.header-item-top > span:nth-child(2) {
+  font-size: 18px;
+  padding: 5px 0;
+}
+
+.colored > :first-child {
+  font-size: 32px;
+}
+
+.header-item-title {
+  color: gray;
+}

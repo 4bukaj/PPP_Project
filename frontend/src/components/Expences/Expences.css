@@ -1,0 +1,68 @@
+.expences-container {
+  padding: 20px 30px;
+}
+
+.expences-container__controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.expences-container__expences {
+  width: 100%;
+  overflow-y: auto;
+  height: 80vh;
+}
+
+@media screen and (max-width: 1199px) {
+  .expences-container__expences {
+    height: 50vh;
+  }
+}
+
+.expences-container__expences:hover {
+  overflow-y: auto;
+  cursor: grab;
+}
+
+.scrolling {
+  cursor: grabbing; /* styling while scrolling down */
+}
+
+.new-expence__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  padding: 10px 4px;
+  height: 100%;
+  width: 30%;
+  transition: 0.5s ease;
+  background-color: var(--dark);
+  color: var(--light);
+  cursor: pointer;
+}
+
+.new-expence__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-expence__title {
+  font-size: 12px;
+}
+
+.transactions-error {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.transactions-error p {
+  margin-top: 20px;
+  font-size: 20px;
+  color: var(--primary);
+}

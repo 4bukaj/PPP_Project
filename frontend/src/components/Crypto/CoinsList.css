@@ -1,0 +1,30 @@
+.crypto-h3 {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 32px;
+}
+
+.coins-list,
+.coins-portfolio {
+  display: flex;
+  flex-direction: column;
+}
+
+.coins-list-header,
+.coins-portfolio-header {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.coins-list-header > div {
+  width: 27%;
+  text-align: left;
+  font-weight: 700;
+}
+
+.coins-list-header > div:first-child {
+  width: 19%;
+}

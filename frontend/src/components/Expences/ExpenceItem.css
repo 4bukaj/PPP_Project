@@ -1,0 +1,53 @@
+.expence-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 20px auto;
+  border-radius: 4px;
+  padding: 10px 40px;
+  color: var(--dark);
+  transition: all 0.2s ease-in-out;
+  background-color: rgb(247, 247, 247);
+  cursor: pointer;
+  position: relative;
+}
+
+.expence-item__row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-left: 15%;
+}
+
+.expence-item:first-child {
+  margin-top: 0;
+}
+
+.expence-date__date {
+  font-weight: normal;
+  color: gray;
+  font-size: 14px;
+}
+
+.expence-item:nth-child(odd) {
+  background-color: rgb(247, 247, 247);
+}
+
+.expence-item__title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.expence-item__amount {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+
+.expence-item__col {
+  display: flex;
+  flex-direction: column;
+}

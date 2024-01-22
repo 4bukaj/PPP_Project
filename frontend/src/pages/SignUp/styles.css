@@ -1,0 +1,78 @@
+.auth-form__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark);
+  height: 100vh;
+  color: #f5f7fa;
+  width: 55%;
+  margin: auto;
+}
+
+.auth-form__container {
+  width: 100%;
+}
+
+.auth-form__container input {
+  color: #e1e7fd !important;
+}
+
+.auth-form__container > div {
+  margin: 15px 0;
+}
+
+.auth-form__container fieldset {
+  border-color: #204254 !important;
+}
+
+.auth-form__controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 5px 5px 10px #ccc;
+  padding: 10%;
+}
+
+.textfield__label {
+  color: #e1e7fd !important;
+}
+
+.link {
+  text-decoration: none;
+  color: #e1e7fd !important;
+  text-align: center;
+  margin: 10px auto;
+  transition: 0.5s;
+}
+
+.text-highlight__secondary {
+  color: #b94a3e;
+  font-weight: 700;
+}
+
+.reset-password__success {
+  margin-top: 30px;
+  max-width: 350px;
+}
+
+.card-container {
+  background-color: var(--dark);
+}
+
+#google-popup-container {
+  height: 400px;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+
+.google-popup-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}

@@ -1,0 +1,50 @@
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background-color: var(--light);
+  color: var(--dark);
+  padding: 50px;
+  z-index: 1000;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.cancel-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-color: var(--light);
+  color: var(--secondary);
+  border: 2px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.35s ease-out;
+}
+
+.cancel-btn:hover {
+  background-color: var(--secondary);
+  color: var(--light);
+}
+
+h2 {
+  font-weight: 400;
+}

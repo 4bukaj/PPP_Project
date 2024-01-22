@@ -1,0 +1,34 @@
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.modal-form__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  width: 700px;
+}
+
+.textfield__label-modal {
+  color: var(--dark) !important;
+}
+
+.modal-form__category {
+  width: 700px;
+  display: flex;
+  overflow-x: scroll;
+  cursor: grab;
+  margin-bottom: 50px;
+}
+
+.modal-form__category:active {
+  cursor: grabbing;
+}
+
+.modal-form__category::-webkit-scrollbar {
+  display: none;
+}

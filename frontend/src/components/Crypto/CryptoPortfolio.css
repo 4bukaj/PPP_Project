@@ -1,0 +1,9 @@
+.coins-portfolio-header > div {
+  width: 27%;
+  text-align: left;
+  font-weight: 700;
+}
+
+.coins-portfolio-header > div:first-child {
+  width: 19%;
+}

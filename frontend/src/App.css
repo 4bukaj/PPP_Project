@@ -1,38 +1,75 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+  --primary: #204254;
+  --secondary: #b94a3e;
+  --dark: #121b22;
+  --light: #e1e7fd;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.dark-btn {
+  background-color: var(--dark);
+  outline: none;
+  color: var(--light);
+  padding: 10px 50px;
+  border-radius: 4px;
+  border: 0;
+  cursor: pointer;
+  transition: background-color 0.7s linear;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.dark-btn:hover {
+  background-color: var(--primary);
 }
 
-.App-link {
-  color: #61dafb;
+.dark-btn:disabled {
+  background-color: #c9caca;
+  color: gray;
+  cursor: default;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* button:disabled {
+  background-color: #c9caca !important;
+  color: gray !important;
+  opacity: 0.4;
+} */
+
+select {
+  background-color: var(--dark);
+  color: var(--light);
+  outline: none;
+  border: 0;
+  border-radius: 4px;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(215, 215, 215);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+.bold {
+  font-weight: 700;
 }
