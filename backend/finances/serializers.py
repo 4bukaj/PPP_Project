@@ -7,7 +7,7 @@ from django.contrib.auth.models import User # type: ignore
 class KryptosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kryptos
-        fields = ['id', 'Coin', 'Amount', 'Worth', 'UserID']
+        fields = ['id', 'Coin', 'Amount', 'Worth', 'UserID', 'ImageUrl', 'CreatedAt']
 
 class UserCheckSerializer(serializers.Serializer):
     username = serializers.CharField()
