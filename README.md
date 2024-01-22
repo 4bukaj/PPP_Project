@@ -8,8 +8,8 @@ Welcome to our React-Django project! This repository combines the power of React
 
 Make sure you have the following installed on your development machine:
 
-- Node.js and npm (for React)
-- Python and pipenv (for Django)
+- Node.js and npm
+- Python and pipenv
 - PostgreSQL (or any other preferred database)
 
 ### Installation
