@@ -1,6 +1,6 @@
 # React-Django Project
 
-Welcome to our React-Django project! This repository combines the power of React for the frontend and Django for the backend to create a modern and dynamic web application.
+Welcome to our finances app developed by Jakub Spruch, Dariusz Krawczyk and Dawid Kałuża. It is a simple app to track your finances and crypto transactions. We used React for frontent and Django for backend.
 
 ## Getting Started
 
