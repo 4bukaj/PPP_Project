@@ -11,6 +11,7 @@ import { mockCryptoData } from "../../components/Crypto/mockData";
 import { Button } from "@mui/material";
 import { ExpensesContext } from "../../contexts/ExpensesContext";
 import axios from "axios";
+import { CoinList } from "../../config/api";
 
 export default function Crypto() {
   const { session } = useContext(ExpensesContext);
@@ -25,19 +26,21 @@ export default function Crypto() {
   const [dailyPNLpercentage, setDailyPNLpercentage] = useState(0);
   const [allCoins, setAllCoins] = useState(mockCryptoData);
 
-  // useEffect(() => {
-  //   const fetchAllCoins = async () => {
-  //     axios
-  //       .get(CoinList("PLN"))
-  //       .then((res) => {
-  //         setAllCoins(res.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
-  //   fetchAllCoins();
-  // }, []);
+  useEffect(() => {
+    const fetchAllCoins = async () => {
+      axios
+        .get(CoinList("PLN"))
+        .then((res) => {
+          console.log("Fetched crypto data");
+          setAllCoins(res.data);
+        })
+        .catch((error) => {
+          console.log("Error while fetching crypto data");
+          console.log(error);
+        });
+    };
+    fetchAllCoins();
+  }, []);
 
   useEffect(() => {
     axios

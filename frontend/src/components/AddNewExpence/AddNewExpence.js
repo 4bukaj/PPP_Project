@@ -4,6 +4,8 @@ import AddNewExpenceForm from "./AddNewExpenceForm";
 import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
 import AddNewCryptoForm from "../Crypto/AddNewCryptoForm";
+import { useContext } from "react";
+import { ExpensesContext } from "../../contexts/ExpensesContext";
 
 export default function Modal({
   open,
@@ -12,6 +14,7 @@ export default function Modal({
   crypto,
   setCrypto,
 }) {
+  const { editedExpense } = useContext(ExpensesContext);
   return ReactDom.createPortal(
     <AnimatePresence>
       {open && (
@@ -41,7 +44,7 @@ export default function Modal({
             {/* MODAL FOR NEW TRANSACION */}
             {addNewExpence && (
               <>
-                <h2>Add new expense</h2>
+                <h2>{editedExpense ? "Edit expense" : "Add new expense"}</h2>
                 <AddNewExpenceForm onClose={onClose} />
               </>
             )}

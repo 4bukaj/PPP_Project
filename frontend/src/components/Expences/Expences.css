@@ -4,10 +4,9 @@
 
 .expences-container__controls {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
+  gap: 15px;
 }
 
 .expences-container__expences {
