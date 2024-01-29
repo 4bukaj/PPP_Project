@@ -119,6 +119,22 @@ class ExpensesListDelete(generics.DestroyAPIView):
             return Response({'success': 'Expense deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class EditExpenseView(generics.RetrieveUpdateAPIView):
+    queryset = Expenses.objects.all()
+    serializer_class = ExpensesSerializer
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 class ExpensesListGetExpenses(generics.ListCreateAPIView):
     queryset = Expenses.objects.all()

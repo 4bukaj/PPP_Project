@@ -15,10 +15,16 @@ export default function Home() {
     setSelectedFilter,
     popupOpen,
     setPopupOpen,
+    setEditedExpense,
   } = useContext(ExpensesContext);
 
   const handleImportFilteredTransactions = (uploadedTransactions, filter) => {
     setSelectedFilter(filter);
+  };
+
+  const handleModalClose = () => {
+    setEditedExpense(null);
+    setPopupOpen(false);
   };
 
   return (
@@ -73,7 +79,7 @@ export default function Home() {
 
       <AddNewExpence
         open={popupOpen}
-        onClose={() => setPopupOpen(false)}
+        onClose={handleModalClose}
         addNewExpence
       />
     </>

@@ -40,36 +40,58 @@ const mouseMove = (e) => {
 const today = new Date().toISOString().split("T")[0];
 
 export default function ModalForm(props) {
-  const { session, setExpenses } = useContext(ExpensesContext);
+  const { session, setExpenses, editedExpense, setEditedExpense } =
+    useContext(ExpensesContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      date: today,
+      title: editedExpense?.title,
+      amount: editedExpense?.amount,
+      date: editedExpense?.date ?? today,
+      category: editedExpense?.category,
     },
   });
   const [category, setCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(category);
   const onSubmit = async (data) => {
     setIsLoading(true);
-    axios
-      .post("http://127.0.0.1:8000/expenses/add/", {
-        Title: data.title,
-        Amount: data.amount,
-        Date: data.date,
-        Category: category,
-        User: session.id,
-      })
-      .then(async (response) => {
-        const data = await fetchExpenses(session.id);
-        setExpenses(data);
-      })
-      .catch((e) => console.log(e));
 
-    setIsLoading(false);
+    if (editedExpense) {
+      axios
+        .put(`http://127.0.0.1:8000/expenses/edit/${editedExpense.id}/`, {
+          Title: data.title,
+          Amount: data.amount,
+          Date: data.date,
+          Category: category,
+          User: session.id,
+        })
+        .then(async (response) => {
+          const data = await fetchExpenses(session.id);
+          setExpenses(data);
+        })
+        .catch((e) => console.log(e));
+    } else {
+      axios
+        .post("http://127.0.0.1:8000/expenses/add/", {
+          Title: data.title,
+          Amount: data.amount,
+          Date: data.date,
+          Category: category,
+          User: session.id,
+        })
+        .then(async (response) => {
+          const data = await fetchExpenses(session.id);
+          setExpenses(data);
+        })
+        .catch((e) => console.log(e));
+
+      setIsLoading(false);
+    }
+
     props.onClose();
   };
 
@@ -159,7 +181,7 @@ export default function ModalForm(props) {
           sx={{ height: "50px" }}
           disabled={isLoading || !isEmptyObject(errors)}
         >
-          Add expense
+          {editedExpense ? "Save expense" : "Add expense"}
         </Button>
       </div>
     </form>

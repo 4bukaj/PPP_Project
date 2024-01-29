@@ -51,6 +51,7 @@ export default function ExpencesFilterType() {
           color="primary"
           onClick={toggleOptionsVisibility}
           sx={{ height: "50px" }}
+          fullWidth
         >
           {`filter by: ${
             options.find((option) => option.value === selectedValue)?.label

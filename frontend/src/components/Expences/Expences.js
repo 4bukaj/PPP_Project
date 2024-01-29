@@ -68,9 +68,9 @@ export default function Expences(props) {
         <Button
           startIcon={<AddBoxIcon />}
           variant="contained"
-          color="secondary"
+          color="primary"
           onClick={() => setPopupOpen(true)}
-          sx={{ height: "50px" }}
+          sx={{ height: "50px", width: "50%" }}
         >
           Add new expense
         </Button>

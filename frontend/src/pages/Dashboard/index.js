@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [filterValue, setFilterValue] = useState("thisMonth");
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [editedExpense, setEditedExpense] = useState(null);
 
   useEffect(() => {
     const fn = async () => {
@@ -83,6 +84,8 @@ export default function Dashboard() {
         returnFilter,
         popupOpen,
         setPopupOpen,
+        editedExpense,
+        setEditedExpense,
       }}
     >
       <div className="dashboard-container">

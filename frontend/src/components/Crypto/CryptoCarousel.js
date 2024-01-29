@@ -14,16 +14,6 @@ export function numberWithCommas(x) {
 export default function CryptoCarousel() {
   const [trendingCoins, setTrendingCoins] = useState(mockTrendingCryptoData);
 
-  // const fetchTrendingCoins = async () => {
-  //   const { data } = await axios.get(TrendingCoins("PLN"));
-
-  //   setTrendingCoins(data);
-  // };
-
-  // useEffect(() => {
-  //   fetchTrendingCoins();
-  // }, []);
-
   const items = trendingCoins.map((coin) => {
     const profit = coin.price_change_percentage_24h;
     const profitColor = profit >= 0 ? "rgb(14,203,129)" : "red";

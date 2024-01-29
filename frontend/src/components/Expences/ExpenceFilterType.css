@@ -1,6 +1,10 @@
+.select-box__container {
+  width: 50%;
+}
+
 .custom-dropdown {
+  width: 100%;
   position: relative;
-  display: inline-block;
 }
 
 .selected-option {
