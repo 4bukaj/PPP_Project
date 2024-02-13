@@ -16,22 +16,21 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { isEmptyObject } from "../../utils";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { jwtDecode } from "jwt-decode";
+import { LoginSocialFacebook } from "reactjs-social-login";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 export default function SignIn() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      email: "kuba@dev.com",
-      password: "admin1",
-    },
-  });
+    setError,
+  } = useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [googleBtnLoading, setGoogleBtnLoading] = useState(false);
+  const [fbBtnLoading, setFbBtnLoading] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
   const onSubmit = (data) => {
@@ -63,7 +62,8 @@ export default function SignIn() {
 
           navigate("/home");
         })
-      );
+      )
+      .catch((e) => setError("email", { message: "User was not found" }));
 
     setLoading(false);
   };
@@ -196,40 +196,75 @@ export default function SignIn() {
                   LOG IN
                 </Typography>
               </div>
-              <Button
-                fullWidth
-                startIcon={
-                  googleBtnLoading ? (
-                    <CircularProgress color={"secondary"} size={20} />
-                  ) : (
-                    <GoogleIcon color={"secondary"} />
-                  )
-                }
-                type="submit"
-                sx={{
-                  marginTop: 6,
-                  marginBottom: 3,
-                  color: "light.main",
-                  padding: "20px",
+              <Grid container columnSpacing={2}>
+                <Grid item xs={6}>
+                  <Button
+                    fullWidth
+                    startIcon={
+                      googleBtnLoading ? (
+                        <CircularProgress color={"secondary"} size={20} />
+                      ) : (
+                        <GoogleIcon color={"secondary"} />
+                      )
+                    }
+                    type="submit"
+                    sx={{
+                      marginTop: 6,
+                      color: "light.main",
+                      padding: "20px",
 
-                  "&.MuiButtonBase-root.Mui-disabled": {
-                    color: "disabled.main",
-                    borderColor: "disabled.main",
-                  },
-                }}
-                variant="outlined"
-                color="secondary"
-                onClick={handleGoogleAuthClick}
-                disabled={googleBtnLoading}
-              >
-                CONTINUE WITH GOOGLE
-              </Button>
+                      "&.MuiButtonBase-root.Mui-disabled": {
+                        color: "disabled.main",
+                        borderColor: "disabled.main",
+                      },
+                    }}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleGoogleAuthClick}
+                    disabled={googleBtnLoading}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <LoginSocialFacebook
+                    appId="423118333380407"
+                    onResolve={(response) => setFbBtnLoading(false)}
+                    onReject={(response) => setFbBtnLoading(false)}
+                  >
+                    <Button
+                      fullWidth
+                      startIcon={
+                        fbBtnLoading ? (
+                          <CircularProgress color={"primary"} size={20} />
+                        ) : (
+                          <FacebookIcon color={"light"} />
+                        )
+                      }
+                      type="submit"
+                      sx={{
+                        marginTop: 6,
+                        marginBottom: 3,
+                        padding: "20px",
+
+                        "&.MuiButtonBase-root.Mui-disabled": {
+                          color: "disabled.main",
+                          borderColor: "disabled.main",
+                        },
+                      }}
+                      variant="outlined"
+                      color="light"
+                      onClick={() => setFbBtnLoading(true)}
+                      disabled={googleBtnLoading}
+                    />
+                  </LoginSocialFacebook>
+                </Grid>
+              </Grid>
+
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
                 className="auth-form__container"
               >
-                <Grid container rowSpacing={4} mt={2} direction={"column"}>
+                <Grid container rowSpacing={4} direction={"column"}>
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
@@ -265,6 +300,11 @@ export default function SignIn() {
                       marginBottom: 3,
                       color: "light.main",
                       padding: "20px",
+
+                      "&.MuiButtonBase-root.Mui-disabled": {
+                        color: "disabled.main",
+                        backgroundColor: "disabled.main",
+                      },
                     }}
                     variant="contained"
                     color="secondary"

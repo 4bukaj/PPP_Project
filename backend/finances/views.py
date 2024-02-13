@@ -5,8 +5,11 @@ from rest_framework.views import APIView # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth import authenticate # type: ignore
 from django.shortcuts import get_object_or_404
-from .models import Expenses, Kryptos
+from .models import Expenses, Kryptos, KryptoData
 from .serializers import UserSerializer, UserCheckSerializer, UserUpdateSerializer, ExpensesSerializer, KryptosSerializer
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 # Admin page: admin - zmitac123
 
@@ -241,4 +244,33 @@ class KryptoDeleteView(generics.DestroyAPIView):
             return Response({"error": "Krypto not found for the specified user."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-# --------------------------------------------------------------------------
+# -------------------------------------------------------------------------
+        
+@csrf_exempt
+def save_krypto_data(request):
+    if request.method == 'POST':
+        try:
+            # Parse the request body as JSON
+            data = json.loads(request.body.decode('utf-8'))
+            if isinstance(data, dict):
+                details = data.get('details')  # Assuming the detail is stored under the key 'details'
+                if details:
+                    # Create a new KryptoData object and save it to the database
+                    new_krypto_data = KryptoData.objects.create(details=details)
+                    return JsonResponse({'success': True, 'message': 'KryptoData saved successfully', 'id': new_krypto_data.id})
+                else:
+                    return JsonResponse({'success': False, 'message': 'No details provided'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid JSON data'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON data'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Only POST requests are allowed'})
+    
+def get_latest_krypto_data(request):
+    try:
+        # Get the most recent record from the KryptoData table
+        latest_krypto_data = KryptoData.objects.latest('createdAt')
+        return JsonResponse({'success': True, 'details': latest_krypto_data.details})
+    except KryptoData.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'No records found in KryptoData table'})

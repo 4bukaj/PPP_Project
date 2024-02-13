@@ -24,7 +24,7 @@ export default function Crypto() {
   const [allTimePNLnum, setAllTimePNLnum] = useState(0);
   const [dailyPNLnum, setDailyPNLnum] = useState(0);
   const [dailyPNLpercentage, setDailyPNLpercentage] = useState(0);
-  const [allCoins, setAllCoins] = useState(mockCryptoData);
+  const [allCoins, setAllCoins] = useState([]);
 
   useEffect(() => {
     const fetchAllCoins = async () => {
@@ -33,10 +33,23 @@ export default function Crypto() {
         .then((res) => {
           console.log("Fetched crypto data");
           setAllCoins(res.data);
+
+          const payload = JSON.stringify(res.data);
+
+          axios.post(`http://127.0.0.1:8000/save-krypto-data/`, {
+            details: payload,
+          });
         })
         .catch((error) => {
           console.log("Error while fetching crypto data");
           console.log(error);
+
+          axios
+            .get(`http://127.0.0.1:8000/get-latest-krypto-data/`)
+            .then((res) => {
+              const data = JSON.parse(res.data.details);
+              setAllCoins(data);
+            });
         });
     };
     fetchAllCoins();
@@ -92,7 +105,7 @@ export default function Crypto() {
     };
 
     calculateTotalInvestments();
-  }, [crypto]);
+  }, [crypto, allCoins]);
 
   return (
     <div className="crypto-container">

@@ -24,3 +24,10 @@ class Kryptos(models.Model):
     
     def _str_(self):
         return f"{self.Coin} - {self.Amount} - {self.Worth} - {self.UserID}"
+
+class KryptoData(models.Model):
+    details = models.JSONField()
+    createdAt = models.DateTimeField(default=timezone.now, editable=False)
+
+    def __str__(self):
+        return f"KryptoData - {self.createdAt}"

@@ -1,5 +1,11 @@
-import React, { useContext, useState } from "react";
-import { Button, Grid, InputAdornment, TextField } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import "./AddNewExpenceForm.css";
 import { categoriesList } from "../Expences/utils.js";
 import ExpenceCategoryItem from "./ExpenceCategoryItem";
@@ -51,13 +57,18 @@ export default function ModalForm(props) {
       title: editedExpense?.title,
       amount: editedExpense?.amount,
       date: editedExpense?.date ?? today,
-      category: editedExpense?.category,
     },
   });
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState(editedExpense?.category);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(category);
+  const [categoryError, setCategoryError] = useState(false);
+
   const onSubmit = async (data) => {
+    if (!category) {
+      setCategoryError(true);
+      return;
+    }
+
     setIsLoading(true);
 
     if (editedExpense) {
@@ -95,16 +106,9 @@ export default function ModalForm(props) {
     props.onClose();
   };
 
-  const renderCategories = Object.values(categoriesList).map((category) => (
-    <ExpenceCategoryItem
-      id={category.id}
-      key={category.id}
-      title={category.title}
-      icon={category.icon}
-      color={category.color}
-      setCategory={setCategory}
-    />
-  ));
+  useEffect(() => {
+    if (categoryError && category) setCategoryError(false);
+  }, [category]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="modal-form">
@@ -164,22 +168,39 @@ export default function ModalForm(props) {
           </Grid>
         </Grid>
       </div>
-      <div
-        className="modal-form__category"
-        id="modal-form__category"
-        onMouseDown={mouseDown}
-        onMouseLeave={mouseLeave}
-        onMouseUp={mouseUp}
-        onMouseMove={mouseMove}
-      >
-        {renderCategories}
+
+      <div className="category-wrapper">
+        <div
+          className="modal-form__category"
+          id="modal-form__category"
+          onMouseDown={mouseDown}
+          onMouseLeave={mouseLeave}
+          onMouseUp={mouseUp}
+          onMouseMove={mouseMove}
+        >
+          {Object.values(categoriesList).map((c) => (
+            <ExpenceCategoryItem
+              id={c.id}
+              key={c.id}
+              title={c.title}
+              icon={c.icon}
+              color={c.color}
+              setCategory={setCategory}
+              selectedCategory={category}
+            />
+          ))}
+        </div>
+        {categoryError && (
+          <p className="category-error">Category is required</p>
+        )}
       </div>
+
       <div className="modal-form__buttons">
         <Button
           type="submit"
           variant="contained"
           sx={{ height: "50px" }}
-          disabled={isLoading || !isEmptyObject(errors)}
+          disabled={isLoading || !isEmptyObject(errors) || categoryError}
         >
           {editedExpense ? "Save expense" : "Add expense"}
         </Button>

@@ -243,6 +243,10 @@ function SignUp() {
                       variant="outlined"
                       {...register("email", {
                         required: "Email is required",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Invalid email address",
+                        },
                       })}
                       error={!!errors?.email}
                       helperText={errors?.email?.message}
@@ -286,6 +290,10 @@ function SignUp() {
                       marginBottom: 3,
                       color: "light.main",
                       padding: "10px",
+
+                      "&.MuiButtonBase-root.Mui-disabled": {
+                        backgroundColor: "disabled.main",
+                      },
                     }}
                     variant="contained"
                     color="secondary"
