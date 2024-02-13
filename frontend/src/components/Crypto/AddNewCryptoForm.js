@@ -69,7 +69,7 @@ export default function AddNewCryptoForm({
 
     const coinValue = crypto.find(
       (coin) => coin.symbol === watchCoin.toLowerCase()
-    ).current_price;
+    )?.current_price;
     const value = coinValue * watchAmount;
 
     setValue("value", value);

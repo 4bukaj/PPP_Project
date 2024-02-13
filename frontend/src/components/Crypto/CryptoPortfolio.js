@@ -25,8 +25,8 @@ export default function CryptoPortfolio({ crypto, allCoins }) {
 
   portfolio.forEach((item) => {
     let curVal =
-      allCoins.find((x) => x.symbol === item.coin.toLowerCase()).current_price *
-      item.amount;
+      allCoins.find((x) => x.symbol === item.coin.toLowerCase())
+        ?.current_price * item.amount;
     item.pnl = ((curVal - item.value) / item.value) * 100;
   });
 
