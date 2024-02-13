@@ -1,6 +1,6 @@
 # React-Django Project
 
-Welcome to our finances app developed by Jakub Spruch, Dariusz Krawczyk and Dawid Kałuża as project for on of our Computer Science classes. It is a simple app to track your finances and crypto transactions. We used React for frontent and Django for backend. 
+Welcome to our finances app developed by Jakub Spruch, Dariusz Krawczyk and Dawid Kałuża as project for one of our Computer Science classes. It is a simple app to track your finances and crypto transactions. We used React for frontent and Django for backend. 
 
 ## Getting Started
 
